@@ -1,5 +1,5 @@
-# plantapp-frontend
-Frontend repository for PlantApp - created and managed with terraform
+# Rootly-frontend
+Frontend repository for Rootly - created and managed with terraform
 # 🌱 ROOTLY - Sistema de Monitoreo Agrícola
 
 <div align="center">
