@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { motion } from 'framer-motion';
+import Hero from './components/Hero';
+import CollaborationSection from './components/CollaborationSection';
+import Footer from './components/Footer';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="App">
+      {/* Floating Elements */}
+      <div className="floating-elements">
+        <motion.div
+          animate={{ 
+            y: [0, -20, 0],
+            x: [0, 10, 0],
+            rotate: [0, 5, 0]
+          }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="floating-element floating-element-1 animate-float-natural organic-shape"
+        />
+        <motion.div
+          animate={{ 
+            y: [0, 15, 0],
+            x: [0, -8, 0],
+            rotate: [0, -3, 0]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="floating-element floating-element-2 animate-float-natural"
+        />
+        <motion.div
+          animate={{ 
+            y: [0, -25, 0],
+            x: [0, 12, 0],
+            rotate: [0, 8, 0]
+          }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="floating-element floating-element-3 animate-float-natural organic-shape"
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      <Hero />
+      <CollaborationSection />
+      <Footer />
+    </div>
+  );
 }
 
-export default App
+export default App;
