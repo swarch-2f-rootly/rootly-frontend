@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
+import { Link } from 'react-router-dom';
 // Removed unused imports
 import { 
   Zap, 
@@ -195,86 +196,8 @@ const Hero: React.FC = () => {
       opacity={0.1}
       blur={40}
     >
-      <section className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden">
-        {/* Navigation */}
-        <nav className="relative z-50 flex justify-between items-center p-7">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center space-x-3"
-          >
-              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Leaf className="w-7 h-7 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                  ROOTLY
-                </h1>
-                <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">v2.0</p>
-              </div>
-          </motion.div>
+      <section className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden mt-12">
 
-          <div className="hidden md:flex items-center space-x-8">
-              <a href="#platform" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
-                Plataforma
-              </a>
-              <a href="#analytics" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
-                Análisis
-              </a>
-              <a href="#pricing" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
-                Precios
-              </a>
-              <motion.button
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-lg font-semibold flex items-center gap-2"
-              >
-                Comenzar
-                <ArrowRight size={16} />
-              </motion.button>
-          </div>
-
-          <motion.button
-            className="md:hidden p-2"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            whileTap={{ scale: 0.95 }}
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </motion.button>
-
-          {/* Mobile Menu */}
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700"
-            >
-              <div className="p-7 space-y-4">
-                <a href="#platform" className="block text-slate-700 dark:text-slate-300 hover:text-emerald-600">
-                  Plataforma
-                </a>
-                <a href="#analytics" className="block text-slate-700 dark:text-slate-300 hover:text-emerald-600">
-                  Análisis
-                </a>
-                <a href="#pricing" className="block text-slate-700 dark:text-slate-300 hover:text-emerald-600">
-                  Precios
-                </a>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 px-4 py-2 rounded-lg font-semibold"
-                >
-                  Comenzar
-                </motion.button>
-              </div>
-            </motion.div>
-          )}
-        </nav>
           {/* Natural Grid Background */}
           <div className="absolute inset-0 opacity-30">
             <div className="grid-pattern"></div>
@@ -377,14 +300,16 @@ const Hero: React.FC = () => {
                 count={8}
                 duration={600}
               >
-                <motion.button 
-                  whileHover={{ scale: 1.02 }} 
-                  whileTap={{ scale: 0.98 }} 
-                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-lg font-semibold flex items-center gap-2"
-                >
-                  Iniciar Monitoreo
-                  <ArrowRight size={16} />
-                </motion.button>
+                <Link to="/login">
+                  <motion.button 
+                    whileHover={{ scale: 1.02 }} 
+                    whileTap={{ scale: 0.98 }} 
+                    className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-lg font-semibold flex items-center gap-2"
+                  >
+                    Iniciar Monitoreo
+                    <ArrowRight size={16} />
+                  </motion.button>
+                </Link>
               </ClickSpark>
               <ClickSpark
                 color="#06B6D4"
@@ -392,14 +317,15 @@ const Hero: React.FC = () => {
                 count={6}
                 duration={500}
               >
-                <motion.button 
-                  whileHover={{ scale: 1.02 }} 
-                  whileTap={{ scale: 0.98 }} 
-                  onClick={scrollToNextSection}
-                  className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-semibold transition-all duration-300"
-                >
-                  Explorar la Plataforma
-                </motion.button>
+                <Link to="/register">
+                  <motion.button 
+                    whileHover={{ scale: 1.02 }} 
+                    whileTap={{ scale: 0.98 }} 
+                    className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-semibold transition-all duration-300"
+                  >
+                    Registrarse
+                  </motion.button>
+                </Link>
               </ClickSpark>
             </motion.div>
 
