@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
+import { Link } from "react-router-dom"
 // Removed unused imports
 import { 
   Zap, 
@@ -156,24 +157,10 @@ const TrueFocus: React.FC<{
 const Hero: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [metrics, setMetrics] = useState({
+  const [metrics] = useState({
     sensors: 12,
     uptime: 99.9,
   })
-
-  // Simulate real-time data updates
-  useEffect(() => {
-    if (!isPlaying) return
-
-    const interval = setInterval(() => {
-      setMetrics((prev) => ({
-        sensors: 12 + Math.floor(Math.random() * 3),
-        uptime: Math.min(100, prev.uptime + Math.random() * 0.1),
-      }))
-    }, 2000)
-
-    return () => clearInterval(interval)
-  }, [isPlaying])
 
   // Función para scroll suave hacia abajo
   const scrollToNextSection = () => {
@@ -225,17 +212,19 @@ const Hero: React.FC = () => {
               <a href="#pricing" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
                 Precios
               </a>
-              <motion.button
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-lg font-semibold flex items-center gap-2"
-              >
-                Comenzar
-                <ArrowRight size={16} />
-              </motion.button>
+              <Link to="/monitoring">
+                <motion.button
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-2xl font-normal flex items-center gap-2 text-sm"
+                >
+                  Comenzar
+                  <ArrowRight size={16} />
+                </motion.button>
+              </Link>
           </div>
 
           <motion.button
@@ -264,13 +253,15 @@ const Hero: React.FC = () => {
                 <a href="#pricing" className="block text-slate-700 dark:text-slate-300 hover:text-emerald-600">
                   Precios
                 </a>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 px-4 py-2 rounded-lg font-semibold"
-                >
-                  Comenzar
-                </motion.button>
+                  <Link to="/monitoring" className="w-full">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 px-4 py-2 rounded-2xl font-normal text-sm"
+                    >
+                      Comenzar
+                    </motion.button>
+                  </Link>
               </div>
             </motion.div>
           )}
@@ -377,14 +368,16 @@ const Hero: React.FC = () => {
                 count={8}
                 duration={600}
               >
-                <motion.button 
-                  whileHover={{ scale: 1.02 }} 
-                  whileTap={{ scale: 0.98 }} 
-                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-lg font-semibold flex items-center gap-2"
-                >
-                  Iniciar Monitoreo
-                  <ArrowRight size={16} />
-                </motion.button>
+                <Link to="/monitoring">
+                  <motion.button 
+                    whileHover={{ scale: 1.02 }} 
+                    whileTap={{ scale: 0.98 }} 
+                    className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-2xl font-normal flex items-center gap-2 text-sm"
+                  >
+                    Iniciar Monitoreo
+                    <ArrowRight size={16} />
+                  </motion.button>
+                </Link>
               </ClickSpark>
               <ClickSpark
                 color="#06B6D4"
@@ -396,7 +389,7 @@ const Hero: React.FC = () => {
                   whileHover={{ scale: 1.02 }} 
                   whileTap={{ scale: 0.98 }} 
                   onClick={scrollToNextSection}
-                  className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-semibold transition-all duration-300"
+                  className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-2xl font-normal transition-all duration-300 text-sm"
                 >
                   Explorar la Plataforma
                 </motion.button>

@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-lg font-semibold flex items-center gap-2 justify-center"
+            className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-2xl font-normal flex items-center gap-2 justify-center text-sm"
           >
             Iniciar monitoreo
             <ArrowRight size={16} />
