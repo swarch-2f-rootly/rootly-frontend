@@ -157,24 +157,10 @@ const TrueFocus: React.FC<{
 const Hero: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [metrics, setMetrics] = useState({
+  const [metrics] = useState({
     sensors: 12,
     uptime: 99.9,
   })
-
-  // Simulate real-time data updates
-  useEffect(() => {
-    if (!isPlaying) return
-
-    const interval = setInterval(() => {
-      setMetrics((prev) => ({
-        sensors: 12 + Math.floor(Math.random() * 3),
-        uptime: Math.min(100, prev.uptime + Math.random() * 0.1),
-      }))
-    }, 2000)
-
-    return () => clearInterval(interval)
-  }, [isPlaying])
 
   // Función para scroll suave hacia abajo
   const scrollToNextSection = () => {
@@ -187,8 +173,6 @@ const Hero: React.FC = () => {
     }
   }
 
-  // Removed unused variables
-
   return (
     <TrueFocus
       color="#10B981"
@@ -197,7 +181,44 @@ const Hero: React.FC = () => {
       blur={40}
     >
       <section className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden mt-12">
+        <nav className="absolute top-3 left-0 right-0 z-50 p-6">
 
+          <motion.button
+            className="md:hidden p-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            whileTap={{ scale: 0.95 }}
+          >
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </motion.button>
+
+          {/* Mobile Menu */}
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-700"
+            >
+              <div className="p-7 space-y-4">
+                <a href="#platform" className="block text-slate-700 dark:text-slate-300 hover:text-emerald-600">
+                  Plataforma
+                </a>
+                <a href="#analytics" className="block text-slate-700 dark:text-slate-300 hover:text-emerald-600">
+                  Sobre nosotros
+                </a>
+                  <Link to="/monitoring" className="w-full">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 px-4 py-2 rounded-2xl font-normal text-sm"
+                    >
+                      Comenzar
+                    </motion.button>
+                  </Link>
+              </div>
+            </motion.div>
+          )}
+        </nav>
           {/* Natural Grid Background */}
           <div className="absolute inset-0 opacity-30">
             <div className="grid-pattern"></div>
@@ -263,7 +284,7 @@ const Hero: React.FC = () => {
                 >
                   <SplitText
                     text="La solución completa"
-                    className="text-4xl md:text-6xl font-bold leading-tight text-slate-800 dark:text-slate-200 block"
+                    className="text-4xl md:text-6xl font-bold leading-tight  text-slate-800/85 block"
                     stagger={0.1}
                     delay={0.6}
                     duration={0.5}
@@ -282,7 +303,7 @@ const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 0.6 }}
-              className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed"
+              className="text-xl text-slate-600 dark:text-slate-500 max-w-2xl leading-relaxed"
             >
               El conjunto de herramientas de tu granja para dejar de adivinar y empezar a optimizar. Recopila, analiza y escala datos agrícolas de forma segura con ROOTLY.
             </motion.p>
@@ -300,11 +321,11 @@ const Hero: React.FC = () => {
                 count={8}
                 duration={600}
               >
-                <Link to="/login">
+                <Link to="/monitoring">
                   <motion.button 
                     whileHover={{ scale: 1.02 }} 
                     whileTap={{ scale: 0.98 }} 
-                    className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-lg font-semibold flex items-center gap-2"
+                    className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-2xl font-normal flex items-center gap-2 text-sm"
                   >
                     Iniciar Monitoreo
                     <ArrowRight size={16} />
@@ -317,15 +338,14 @@ const Hero: React.FC = () => {
                 count={6}
                 duration={500}
               >
-                <Link to="/register">
-                  <motion.button 
-                    whileHover={{ scale: 1.02 }} 
-                    whileTap={{ scale: 0.98 }} 
-                    className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-semibold transition-all duration-300"
-                  >
-                    Registrarse
-                  </motion.button>
-                </Link>
+                <motion.button 
+                  whileHover={{ scale: 1.02 }} 
+                  whileTap={{ scale: 0.98 }} 
+                  onClick={scrollToNextSection}
+                  className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-2xl font-normal transition-all duration-300 text-sm"
+                >
+                  Explorar la Plataforma
+                </motion.button>
               </ClickSpark>
             </motion.div>
 

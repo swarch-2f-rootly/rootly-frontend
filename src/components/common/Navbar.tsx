@@ -16,11 +16,8 @@ const Navbar: React.FC = () => {
         <a href="#platform" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
           Plataforma
         </a>
-        <a href="#analytics" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
-          Análisis
-        </a>
-        <a href="#pricing" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
-          Precios
+        <a href="#about-us" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
+          Sobre nosotros
         </a>
         <Link to="/login" className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-lg font-semibold flex items-center gap-2">Iniciar sesión</Link>
         <Link to="/register" className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-lg font-semibold flex items-center gap-2">Registrarse</Link>
@@ -43,11 +40,8 @@ const Navbar: React.FC = () => {
           <a href="#platform" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
             Plataforma
           </a>
-          <a href="#analytics" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
-            Análisis
-          </a>
-          <a href="#pricing" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
-            Precios
+          <a href="#about-us" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+           Sobre nosotros
           </a>
           <Link to="/login" className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-lg font-semibold flex items-center gap-2 w-4/5 text-center" onClick={() => setIsMenuOpen(false)}>Iniciar sesión</Link>
           <Link to="/register" className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-lg font-semibold flex items-center gap-2 w-4/5 text-center" onClick={() => setIsMenuOpen(false)}>Registrarse</Link>
