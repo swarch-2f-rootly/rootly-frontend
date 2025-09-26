@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
-import { getAllPlants } from '../data/plantsMock'
+import { getAllPlants } from '../../data/plantsMock'
 import {
   ArrowLeft,
   Plus,

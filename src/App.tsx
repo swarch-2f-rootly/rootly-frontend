@@ -1,20 +1,24 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './components/HomePage';
-import PlantsListPage from './components/PlantsListPage';
-import PlantDetailPage from './components/PlantDetailPage';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/common/Navbar';
+import HomePage from './features/homepage/HomePage';
+import LoginPage from './features/login/LoginPage';
+import RegisterPage from './features/register/RegisterPage';
+import PlantsListPage from './features/plantDetail/PlantsListPage';
+import PlantDetailPage from './features/plantDetail/PlantDetailPage';
 import './App.css';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/monitoring" element={<PlantsListPage />} />
-          <Route path="/monitoring/:plantId" element={<PlantDetailPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className="App pt-32">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/plants" element={<PlantsListPage />} />
+        <Route path="/plants/:plantId" element={<PlantDetailPage />} />
+      </Routes>
+    </div>
   );
 }
 

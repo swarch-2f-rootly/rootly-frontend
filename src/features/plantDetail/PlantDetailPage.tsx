@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Link, useParams } from "react-router-dom"
-import StackCards from './StackCards'
-import { getPlantById } from '../data/plantsMock'
+import StackCards from '../ui/StackCards'
+import { getPlantById } from '../../data/plantsMock'
 import {
   Droplets,
   Thermometer,
@@ -18,12 +18,12 @@ import {
 } from "lucide-react"
 
 // Importar componentes separados
-import ClickSpark from './ui/ClickSpark'
-import TrueFocus from './ui/TrueFocus'
-import CountUp from './ui/CountUp'
-import PlantHeader from './PlantDetail/PlantHeader'
-import PlantCharts from './PlantDetail/PlantCharts'
-import PlantAlerts from './PlantDetail/PlantAlerts'
+import ClickSpark from '../ui/ClickSpark'
+import TrueFocus from '../ui/TrueFocus'
+import CountUp from '../ui/CountUp'
+import PlantHeader from './PlantHeader'
+import PlantCharts from './PlantCharts'
+import PlantAlerts from './PlantAlerts'
 
 interface PlantData {
   soilHumidity: number

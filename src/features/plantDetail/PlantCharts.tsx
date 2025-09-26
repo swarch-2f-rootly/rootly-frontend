@@ -1,5 +1,6 @@
 import React from "react"
 import { motion } from "framer-motion"
+// @ts-ignore
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Thermometer, Droplets, Sun } from "lucide-react"
 
@@ -142,7 +143,7 @@ const PlantCharts: React.FC<PlantChartsProps> = ({ chartData, currentData }) => 
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                   padding: '8px'
                 }}
-                formatter={(value) => [`${value}°C`, 'Temperatura']}
+                formatter={(value: number | string) => [`${value}°C`, 'Temperatura']}
               />
               <Line 
                 type="monotone" 
@@ -222,7 +223,7 @@ const PlantCharts: React.FC<PlantChartsProps> = ({ chartData, currentData }) => 
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                   padding: '8px'
                 }}
-                formatter={(value) => [`${value}%`, 'Humedad']}
+                formatter={(value: number | string) => [`${value}%`, 'Humedad']}
               />
               <Line 
                 type="monotone" 
@@ -312,7 +313,7 @@ const PlantCharts: React.FC<PlantChartsProps> = ({ chartData, currentData }) => 
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                   padding: '8px'
                 }}
-                formatter={(value) => [`${value} lux`, 'Luminosidad']}
+                formatter={(value: number | string) => [`${value} lux`, 'Luminosidad']}
               />
               <Line 
                 type="monotone" 

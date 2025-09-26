@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
-import Hero from './Hero';
-import CollaborationSection from './CollaborationSection';
-import Footer from './Footer';
+import Hero from '../landing/Hero';
+import CollaborationSection from '../landing/CollaborationSection';
+import AboutUs from '../landing/AboutUs';
+import Footer from '../../components/common/Footer';
 
 const HomePage: React.FC = () => {
   return (
@@ -39,6 +40,7 @@ const HomePage: React.FC = () => {
 
       <Hero />
       <CollaborationSection />
+      <AboutUs />
       <Footer />
     </div>
   );
