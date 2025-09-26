@@ -5,6 +5,7 @@ import LoginPage from './features/login/LoginPage';
 import RegisterPage from './features/register/RegisterPage';
 import PlantsListPage from './features/plantDetail/PlantsListPage';
 import PlantDetailPage from './features/plantDetail/PlantDetailPage';
+import UserProfilePage from './features/profile/UserProfilePage';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/plants" element={<PlantsListPage />} />
         <Route path="/plants/:plantId" element={<PlantDetailPage />} />
+        <Route path="/profile" element={<UserProfilePage />} />
       </Routes>
     </div>
   );
