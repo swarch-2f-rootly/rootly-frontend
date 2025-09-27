@@ -21,7 +21,7 @@ const RegisterForm: React.FC = () => {
     
     // Aquí iría la lógica de registro real
     localStorage.setItem('isAuth', 'true');
-    navigate('/plants'); // Redirige a la página principal de plantas
+    navigate('/monitoring'); // Redirige a la página principal de plantas
   };
 
   return (

@@ -26,7 +26,7 @@ const LoginForm: React.FC = () => {
     
     localStorage.setItem('isAuth', 'true');
     window.dispatchEvent(new Event('authChange'));
-    navigate('/plants');
+    navigate('/monitoring');
   };
 
   return (

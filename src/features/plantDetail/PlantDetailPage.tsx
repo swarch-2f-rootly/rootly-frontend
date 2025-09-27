@@ -15,14 +15,13 @@ import {
   Pause,
   Activity,
   Sun,
-  Image as ImageIcon
+  ArrowLeft
 } from "lucide-react"
 
 // Importar componentes separados
 import ClickSpark from '../ui/ClickSpark'
 import TrueFocus from '../ui/TrueFocus'
 import CountUp from '../ui/CountUp'
-import PlantHeader from './PlantHeader'
 import PlantCharts from './PlantCharts'
 import PlantAlerts from './PlantAlerts'
 
@@ -41,7 +40,6 @@ const PlantDetailPage: React.FC = () => {
   const { plantId } = useParams<{ plantId: string }>()
   const [isMonitoring, setIsMonitoring] = useState(false)
   const [isClient, setIsClient] = useState(false)
-  const [photos, setPhotos] = useState<Array<{ url: string; date: string }>>([]);
 
   // Encontrar la planta por ID
   const plant = getPlantById(parseInt(plantId || "1"))
@@ -87,19 +85,6 @@ const PlantDetailPage: React.FC = () => {
     return () => clearInterval(interval)
   }, [isMonitoring])
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        setPhotos(prev => [
-          ...prev,
-          { url: ev.target?.result as string, date: new Date().toLocaleString('es-CO') }
-        ]);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   // Datos mock para gráficos específicos de esta planta
   const chartData = [
@@ -134,7 +119,7 @@ const PlantDetailPage: React.FC = () => {
 
   if (!plant) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950 p-6 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950 p-6 pt-16 flex items-center justify-center">
         <div className="text-center">
           <Leaf className="w-16 h-16 text-slate-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-slate-600 dark:text-slate-400 mb-2">
@@ -158,10 +143,25 @@ const PlantDetailPage: React.FC = () => {
       opacity={0.1}
       blur={40}
     >
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950 p-6 pt-16">
         <div className="max-w-6xl mx-auto space-y-8">
-          {/* Plant Header */}
-          <PlantHeader plant={plant} />
+          {/* Botón de regreso */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-6"
+          >
+            <Link
+              to="/monitoring"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-emerald-200 dark:border-emerald-700 rounded-xl hover:bg-white dark:hover:bg-slate-800 transition-all duration-300 shadow-sm hover:shadow-md"
+            >
+              <ArrowLeft className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
+                Volver al monitoreo
+              </span>
+            </Link>
+          </motion.div>
           {/* Botón para subir foto 
            <div className="flex justify-end mb-4">
             <label className="flex items-center gap-2 cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-lg shadow hover:from-emerald-600 hover:to-teal-700 transition-all">
