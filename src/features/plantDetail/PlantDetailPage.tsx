@@ -162,14 +162,14 @@ const PlantDetailPage: React.FC = () => {
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Plant Header */}
           <PlantHeader plant={plant} />
-          {/* Botón para subir foto */}
-          <div className="flex justify-end mb-4">
+          {/* Botón para subir foto 
+           <div className="flex justify-end mb-4">
             <label className="flex items-center gap-2 cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-lg shadow hover:from-emerald-600 hover:to-teal-700 transition-all">
               <ImageIcon className="w-5 h-5" />
               Agregar foto de la planta
               <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
             </label>
-          </div>
+          </div>*/}
 
           {/* Main Monitoring Cards */}
           <div className="grid lg:grid-cols-3 gap-6">
@@ -453,7 +453,7 @@ const PlantDetailPage: React.FC = () => {
           <PlantCharts chartData={chartData} currentData={currentData} />
           <PlantAlerts plant={plant} currentData={currentData} />
 
-          {/* Sección Timeline de evolución de la planta */}
+          {/* Sección Timeline de evolución de la planta 
           {photos.length > 0 && (
             <div className="mt-12">
               <h3 className="text-2xl font-bold text-emerald-700 mb-6 flex items-center gap-2"><Clock className="w-6 h-6 text-teal-500" /> Evolución de la planta</h3>
@@ -474,7 +474,7 @@ const PlantDetailPage: React.FC = () => {
                 ))}
               </div>
             </div>
-          )}
+          )}*/}
         </div>
       </div>
     </TrueFocus>
