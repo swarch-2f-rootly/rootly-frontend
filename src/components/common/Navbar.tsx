@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
   };
 
   const handleLogoClick = () => {
-    if (isAuth) navigate('/plants');
+    if (isAuth) navigate('/monitoring');
     else navigate('/');
   };
 
@@ -35,14 +35,14 @@ const Navbar: React.FC = () => {
       </div>
       {isAuth ? (
         <div className="hidden md:flex items-center space-x-8">
-          <Link to="/plants" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 text-sm"><HomeIcon className="w-4 h-4" /> Home</Link>
+          <Link to="/monitoring" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 text-sm"><HomeIcon className="w-4 h-4" /> Home</Link>
           <Link to="/profile" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 text-sm"><User className="w-4 h-4" /> Perfil</Link>
           <button onClick={handleLogout} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 text-sm"><LogOut className="w-4 h-4" /> Logout</button>
         </div>
       ) : (
         <div className="hidden md:flex items-center space-x-8">
-          <a href="#platform" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal">Plataforma</a>
-          <a href="#about-us" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal">Sobre nosotros</a>
+          <a href="#platform" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal text-sm">Plataforma</a>
+          <a href="#about-us" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal text-sm">Sobre nosotros</a>
           <Link to="/login" className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 text-sm">Iniciar sesión</Link>
           <Link to="/register" className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 text-sm">Registrarse</Link>
         </div>
@@ -64,14 +64,14 @@ const Navbar: React.FC = () => {
         >
           {isAuth ? (
             <>
-              <Link to="/plants" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}><HomeIcon className="w-4 h-4" /> Home</Link>
+              <Link to="/monitoring" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}><HomeIcon className="w-4 h-4" /> Home</Link>
               <Link to="/profile" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}><User className="w-4 h-4" /> Perfil</Link>
               <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 w-4/5 text-center text-sm"><LogOut className="w-4 h-4" /> Logout</button>
             </>
           ) : (
             <>
-              <a href="#platform" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal w-4/5 text-center" onClick={() => setIsMenuOpen(false)}>Plataforma</a>
-              <a href="#about-us" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal w-4/5 text-center" onClick={() => setIsMenuOpen(false)}>Sobre nosotros</a>
+              <a href="#platform" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}>Plataforma</a>
+              <a href="#about-us" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}>Sobre nosotros</a>
               <Link to="/login" className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}>Iniciar sesión</Link>
               <Link to="/register" className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}>Registrarse</Link>
             </>

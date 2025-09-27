@@ -11,16 +11,17 @@ import './App.css';
 function App() {
   const location = useLocation();
   const isLoginOrRegister = location.pathname === '/login' || location.pathname === '/register';
+  const isPlantDetail = location.pathname.startsWith('/monitoring/') && location.pathname !== '/monitoring';
   
   return (
-    <div className={`App ${!isLoginOrRegister ? 'pt-32' : ''}`}>
-      {!isLoginOrRegister && <Navbar />}
+    <div className={`App ${!isLoginOrRegister && !isPlantDetail ? 'pt-32' : ''}`}>
+      {!isLoginOrRegister && !isPlantDetail && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/plants" element={<PlantsListPage />} />
-        <Route path="/plants/:plantId" element={<PlantDetailPage />} />
+        <Route path="/monitoring" element={<PlantsListPage />} />
+        <Route path="/monitoring/:plantId" element={<PlantDetailPage />} />
         <Route path="/profile" element={<UserProfilePage />} />
       </Routes>
     </div>
