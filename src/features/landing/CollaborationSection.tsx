@@ -13,12 +13,23 @@ const RotatingText: React.FC<{
   React.useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % words.length);
-    }, 2000);
+    }, 3000);
     return () => clearInterval(interval);
   }, [words.length]);
 
+  // Calcular el ancho máximo necesario para la palabra más larga
+  const maxWidth = Math.max(...words.map(word => word.length)) * 0.6; // Aproximación en em
+
   return (
-    <div className="relative inline-block overflow-hidden" style={{ verticalAlign: 'middle', height: '1.2em' }}>
+    <div 
+      className="relative inline-block overflow-hidden" 
+      style={{ 
+        verticalAlign: 'middle', 
+        height: '1.2em',
+        minWidth: `${maxWidth}em`,
+        textAlign: 'left'
+      }}
+    >
       <motion.span
         key={currentIndex}
         initial={{ opacity: 0, y: 30 }}
@@ -28,7 +39,7 @@ const RotatingText: React.FC<{
           duration: 0.6,
           ease: "easeInOut"
         }}
-        className={`${className} block flex items-center`}
+        className={`${className} block flex items-center justify-start`}
       >
         {words[currentIndex]}
       </motion.span>
@@ -108,7 +119,6 @@ const CollaborationSection: React.FC = () => {
                   words={["fluida", "eficiente", "inteligente", "sostenible"]} 
                   className="text-emerald-600"
                 />
-                .
               </motion.h2>
 
               <motion.p
@@ -132,7 +142,7 @@ const CollaborationSection: React.FC = () => {
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
                   animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.5 + i * 0.1, duration: 0.6 }}
+                  transition={{ delay: 0.5 + i * 0.05, duration: 0.4 }}
                   className="flex items-center space-x-3"
                 >
                   <div className="w-6 h-6 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
@@ -149,7 +159,7 @@ const CollaborationSection: React.FC = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ delay: 0.6, duration: 0.8 }}
-              className="p-6 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg"
+              className="p-6 bg-white/95 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">

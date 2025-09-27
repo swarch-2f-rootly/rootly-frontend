@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { motion } from "framer-motion"
 import { Link } from 'react-router-dom';
 // Removed unused imports
@@ -12,7 +12,6 @@ import {
   Database, 
   Wifi, 
   TrendingUp,
-  Leaf,
   Menu,
   X,
   Thermometer,
@@ -123,32 +122,42 @@ const TrueFocus: React.FC<{
   blur?: number;
 }> = ({ children, color = "#10B981", size = 200, opacity = 0.1, blur = 40 }) => {
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = React.useState(false);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    setPosition({ x: e.clientX, y: e.clientY });
+    if (isHovered) {
+      setPosition({ x: e.clientX, y: e.clientY });
+    }
   };
 
   return (
-    <div onMouseMove={handleMouseMove} style={{ position: 'relative' }}>
-      <motion.div
-        style={{
-          position: 'fixed',
-          top: position.y - size / 2,
-          left: position.x - size / 2,
-          width: size,
-          height: size,
-          borderRadius: '50%',
-          background: `radial-gradient(circle, ${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')} 0%, transparent 70%)`,
-          filter: `blur(${blur}px)`,
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-        animate={{
-          x: 0,
-          y: 0,
-        }}
-        transition={{ type: "spring", damping: 30, stiffness: 200 }}
-      />
+    <div 
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ position: 'relative' }}
+    >
+      {isHovered && (
+        <motion.div
+          style={{
+            position: 'fixed',
+            top: position.y - size / 2,
+            left: position.x - size / 2,
+            width: size,
+            height: size,
+            borderRadius: '50%',
+            background: `radial-gradient(circle, ${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')} 0%, transparent 70%)`,
+            filter: `blur(${blur}px)`,
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+          animate={{
+            x: 0,
+            y: 0,
+          }}
+          transition={{ type: "spring", damping: 30, stiffness: 200 }}
+        />
+      )}
       {children}
     </div>
   );
@@ -157,21 +166,7 @@ const TrueFocus: React.FC<{
 const Hero: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [metrics] = useState({
-    sensors: 12,
-    uptime: 99.9,
-  })
 
-  // Función para scroll suave hacia abajo
-  const scrollToNextSection = () => {
-    const nextSection = document.querySelector('#collaboration-section')
-    if (nextSection) {
-      nextSection.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      })
-    }
-  }
 
   return (
     <TrueFocus
@@ -206,7 +201,7 @@ const Hero: React.FC = () => {
                 <a href="#analytics" className="block text-slate-700 dark:text-slate-300 hover:text-emerald-600">
                   Sobre nosotros
                 </a>
-                  <Link to="/monitoring" className="w-full">
+                  <Link to="/login" className="w-full">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -232,7 +227,7 @@ const Hero: React.FC = () => {
                 x: [0, 10, 0],
                 rotate: [0, 5, 0]
               }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
               className="absolute top-20 left-10 w-8 h-8 bg-emerald-200 rounded-full opacity-60"
             />
             <motion.div
@@ -241,7 +236,7 @@ const Hero: React.FC = () => {
                 x: [0, -8, 0],
                 rotate: [0, -3, 0]
               }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
               className="absolute top-40 right-20 w-6 h-6 bg-teal-200 rounded-full opacity-50"
             />
             <motion.div
@@ -250,7 +245,7 @@ const Hero: React.FC = () => {
                 x: [0, 12, 0],
                 rotate: [0, 8, 0]
               }}
-              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
               className="absolute bottom-40 left-1/4 w-10 h-10 bg-cyan-200 rounded-full opacity-40"
             />
           </div>
@@ -338,14 +333,15 @@ const Hero: React.FC = () => {
                 count={6}
                 duration={500}
               >
-                <motion.button 
-                  whileHover={{ scale: 1.02 }} 
-                  whileTap={{ scale: 0.98 }} 
-                  onClick={scrollToNextSection}
-                  className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-2xl font-normal transition-all duration-300 text-sm"
-                >
-                  Explorar la Plataforma
-                </motion.button>
+                <Link to="/login">
+                  <motion.button 
+                    whileHover={{ scale: 1.02 }} 
+                    whileTap={{ scale: 0.98 }} 
+                    className="border-2 border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-2xl font-normal transition-all duration-300 text-sm"
+                  >
+                    Explorar la Plataforma
+                  </motion.button>
+                </Link>
               </ClickSpark>
             </motion.div>
 
@@ -449,7 +445,7 @@ const Hero: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 2.2 + index * 0.1, duration: 0.6 }}
-                className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-xl border border-slate-200 hover:shadow-lg transition-all duration-300"
+                className="text-center p-6 bg-white/90 rounded-xl border border-slate-200 hover:shadow-lg transition-shadow duration-200"
               >
                 <div className={`w-12 h-12 bg-${stat.color}-100 rounded-lg flex items-center justify-center mx-auto mb-3`}>
                   <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
