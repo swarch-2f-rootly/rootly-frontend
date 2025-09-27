@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom';
 // Removed unused imports
 import { 
   Zap, 
@@ -173,8 +173,6 @@ const Hero: React.FC = () => {
     }
   }
 
-  // Removed unused variables
-
   return (
     <TrueFocus
       color="#10B981"
@@ -182,50 +180,8 @@ const Hero: React.FC = () => {
       opacity={0.1}
       blur={40}
     >
-      <section className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden">
-        {/* Navigation */}
-        <nav className="relative z-50 flex justify-between items-center p-7">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center space-x-3"
-          >
-              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Leaf className="w-7 h-7 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                  ROOTLY
-                </h1>
-                <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">v2.0</p>
-              </div>
-          </motion.div>
-
-          <div className="hidden md:flex items-center space-x-8">
-              <a href="#platform" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
-                Plataforma
-              </a>
-              <a href="#analytics" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
-                Análisis
-              </a>
-              <a href="#pricing" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-medium">
-                Precios
-              </a>
-              <Link to="/monitoring">
-                <motion.button
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-2xl font-normal flex items-center gap-2 text-sm"
-                >
-                  Comenzar
-                  <ArrowRight size={16} />
-                </motion.button>
-              </Link>
-          </div>
+      <section className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden mt-12">
+        <nav className="absolute top-3 left-0 right-0 z-50 p-6">
 
           <motion.button
             className="md:hidden p-2"
@@ -248,10 +204,7 @@ const Hero: React.FC = () => {
                   Plataforma
                 </a>
                 <a href="#analytics" className="block text-slate-700 dark:text-slate-300 hover:text-emerald-600">
-                  Análisis
-                </a>
-                <a href="#pricing" className="block text-slate-700 dark:text-slate-300 hover:text-emerald-600">
-                  Precios
+                  Sobre nosotros
                 </a>
                   <Link to="/monitoring" className="w-full">
                     <motion.button
@@ -331,7 +284,7 @@ const Hero: React.FC = () => {
                 >
                   <SplitText
                     text="La solución completa"
-                    className="text-4xl md:text-6xl font-bold leading-tight text-slate-800 dark:text-slate-200 block"
+                    className="text-4xl md:text-6xl font-bold leading-tight  text-slate-800/85 block"
                     stagger={0.1}
                     delay={0.6}
                     duration={0.5}
@@ -350,7 +303,7 @@ const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 0.6 }}
-              className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed"
+              className="text-xl text-slate-600 dark:text-slate-500 max-w-2xl leading-relaxed"
             >
               El conjunto de herramientas de tu granja para dejar de adivinar y empezar a optimizar. Recopila, analiza y escala datos agrícolas de forma segura con ROOTLY.
             </motion.p>
