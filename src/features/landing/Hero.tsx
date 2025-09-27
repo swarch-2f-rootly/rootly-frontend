@@ -321,7 +321,7 @@ const Hero: React.FC = () => {
                 count={8}
                 duration={600}
               >
-                <Link to="/monitoring">
+                <Link to="/login">
                   <motion.button 
                     whileHover={{ scale: 1.02 }} 
                     whileTap={{ scale: 0.98 }} 

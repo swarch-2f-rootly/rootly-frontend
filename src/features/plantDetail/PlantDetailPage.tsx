@@ -14,7 +14,8 @@ import {
   Play,
   Pause,
   Activity,
-  Sun
+  Sun,
+  Image as ImageIcon
 } from "lucide-react"
 
 // Importar componentes separados
@@ -40,7 +41,8 @@ const PlantDetailPage: React.FC = () => {
   const { plantId } = useParams<{ plantId: string }>()
   const [isMonitoring, setIsMonitoring] = useState(false)
   const [isClient, setIsClient] = useState(false)
-  
+  const [photos, setPhotos] = useState<Array<{ url: string; date: string }>>([]);
+
   // Encontrar la planta por ID
   const plant = getPlantById(parseInt(plantId || "1"))
   
@@ -84,6 +86,20 @@ const PlantDetailPage: React.FC = () => {
 
     return () => clearInterval(interval)
   }, [isMonitoring])
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setPhotos(prev => [
+          ...prev,
+          { url: ev.target?.result as string, date: new Date().toLocaleString('es-CO') }
+        ]);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Datos mock para gráficos específicos de esta planta
   const chartData = [
@@ -146,6 +162,14 @@ const PlantDetailPage: React.FC = () => {
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Plant Header */}
           <PlantHeader plant={plant} />
+          {/* Botón para subir foto 
+           <div className="flex justify-end mb-4">
+            <label className="flex items-center gap-2 cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-lg shadow hover:from-emerald-600 hover:to-teal-700 transition-all">
+              <ImageIcon className="w-5 h-5" />
+              Agregar foto de la planta
+              <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+            </label>
+          </div>*/}
 
           {/* Main Monitoring Cards */}
           <div className="grid lg:grid-cols-3 gap-6">
@@ -428,6 +452,29 @@ const PlantDetailPage: React.FC = () => {
           {/* Charts and Alerts Section */}
           <PlantCharts chartData={chartData} currentData={currentData} />
           <PlantAlerts plant={plant} currentData={currentData} />
+
+          {/* Sección Timeline de evolución de la planta 
+          {photos.length > 0 && (
+            <div className="mt-12">
+              <h3 className="text-2xl font-bold text-emerald-700 mb-6 flex items-center gap-2"><Clock className="w-6 h-6 text-teal-500" /> Evolución de la planta</h3>
+              <div className="relative border-l-4 border-emerald-200 ml-6">
+                {photos.map((photo, idx) => (
+                  <div key={idx} className="mb-10 ml-6 flex items-center group">
+                    <span className="absolute -left-6 flex items-center justify-center w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full shadow-lg border-4 border-white">
+                      <ImageIcon className="w-6 h-6 text-white" />
+                    </span>
+                    <div className="bg-white/80 backdrop-blur-md border-2 border-emerald-100 rounded-xl shadow-lg p-4 flex flex-col md:flex-row items-center gap-4 w-full hover:scale-105 transition-transform duration-300">
+                      <img src={photo.url} alt="Evolución planta" className="w-32 h-32 object-cover rounded-lg border border-emerald-200 shadow" />
+                      <div className="flex flex-col items-start">
+                        <span className="text-sm text-slate-500 mb-1"><Clock className="inline w-4 h-4 mr-1 text-emerald-400" />{photo.date}</span>
+                        <span className="text-emerald-700 font-semibold">Foto subida</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}*/}
         </div>
       </div>
     </TrueFocus>
