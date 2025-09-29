@@ -12,9 +12,8 @@ interface AlertData {
 }
 
 interface Plant {
-  id: number
+  id: string
   name: string
-  alerts: number
 }
 
 interface PlantAlertsProps {
@@ -126,7 +125,7 @@ const PlantAlerts: React.FC<PlantAlertsProps> = ({ plant, currentData }) => {
             }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >
-            {plant.alerts} activas
+            {alerts.length} activas
           </motion.span>
         </div>
         <div className="space-y-4">
