@@ -1,42 +1,211 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Natural theme with greens, aquamarine, blues, and earth tones */
+:root {
+  /* Natural theme with greens, aquamarine, blues, and earth tones */
+  --background: oklch(0.98 0.01 120);
+  --foreground: oklch(0.15 0.02 140);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.02 140);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.02 140);
+  --primary: oklch(0.45 0.18 140); /* ROOTLY green */
+  --primary-foreground: oklch(0.98 0.01 120);
+  --secondary: oklch(0.95 0.01 120);
+  --secondary-foreground: oklch(0.25 0.02 140);
+  --muted: oklch(0.96 0.01 120);
+  --muted-foreground: oklch(0.55 0.02 140);
+  --accent: oklch(0.55 0.15 180); /* Aquamarine accent */
+  --accent-foreground: oklch(0.98 0.01 120);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0.01 120);
+  --border: oklch(0.92 0.01 120);
+  --input: oklch(0.92 0.01 120);
+  --ring: oklch(0.45 0.18 140);
+  --chart-1: oklch(0.45 0.18 140); /* Green */
+  --chart-2: oklch(0.55 0.15 180); /* Aquamarine */
+  --chart-3: oklch(0.35 0.12 220); /* Blue */
+  --chart-4: oklch(0.4 0.08 60); /* Earth brown */
+  --chart-5: oklch(0.5 0.1 200); /* Sky blue */
+  --radius: 1rem;
+  --natural-gradient: linear-gradient(135deg, oklch(0.45 0.18 140), oklch(0.55 0.15 180));
+  --earth-gradient: linear-gradient(135deg, oklch(0.4 0.08 60), oklch(0.35 0.12 220));
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.dark {
+  /* Dark theme with natural colors */
+  --background: oklch(0.06 0.01 140);
+  --foreground: oklch(0.95 0.01 120);
+  --card: oklch(0.08 0.01 140);
+  --card-foreground: oklch(0.95 0.01 120);
+  --popover: oklch(0.08 0.01 140);
+  --popover-foreground: oklch(0.95 0.01 120);
+  --primary: oklch(0.65 0.18 140);
+  --primary-foreground: oklch(0.06 0.01 140);
+  --secondary: oklch(0.12 0.01 140);
+  --secondary-foreground: oklch(0.95 0.01 120);
+  --muted: oklch(0.12 0.01 140);
+  --muted-foreground: oklch(0.65 0.02 140);
+  --accent: oklch(0.75 0.15 180);
+  --accent-foreground: oklch(0.06 0.01 140);
+  --destructive: oklch(0.65 0.22 25);
+  --destructive-foreground: oklch(0.95 0.01 120);
+  --border: oklch(0.12 0.01 140);
+  --input: oklch(0.12 0.01 140);
+  --ring: oklch(0.65 0.18 140);
+  --chart-1: oklch(0.65 0.18 140);
+  --chart-2: oklch(0.75 0.15 180);
+  --chart-3: oklch(0.55 0.12 220);
+  --chart-4: oklch(0.6 0.08 60);
+  --chart-5: oklch(0.7 0.1 200);
+  --natural-gradient: linear-gradient(135deg, oklch(0.65 0.18 140), oklch(0.75 0.15 180));
+  --earth-gradient: linear-gradient(135deg, oklch(0.6 0.08 60), oklch(0.55 0.12 220));
 }
 
-@keyframes logo-spin {
+/* Global styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+  line-height: 1.6;
+  color: var(--foreground);
+  background: var(--background);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sensor-id {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.875rem;
+  color: var(--text-dark);
+}
+
+.App {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Natural grid pattern - used in Hero section */
+.grid-pattern {
+  background-image: 
+    linear-gradient(rgba(16, 185, 129, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(20, 184, 166, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 184, 166, 0.04) 1px, transparent 1px);
+  background-size: 50px 50px, 50px 50px, 25px 25px, 25px 25px;
+}
+
+/* Custom animations for landing page */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  }
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+  }
+}
+
+@keyframes slide-up {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(30px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { 
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-.card {
-  padding: 2em;
+@keyframes organic-morph {
+  0%, 100% { 
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: rotate(0deg);
+  }
+  50% { 
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    transform: rotate(180deg);
+  }
 }
 
-.read-the-docs {
-  color: #888;
+/* Animation utility classes */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-natural {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out;
+}
+
+.animate-organic-morph {
+  animation: organic-morph 20s ease-in-out infinite;
+}
+
+/* Organic shape utility */
+.organic-shape {
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

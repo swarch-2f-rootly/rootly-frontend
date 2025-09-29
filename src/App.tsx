@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route, useLocation } from 'react-router-dom';
+import Navbar from './components/common/Navbar';
+import HomePage from './features/homepage/HomePage';
+import LoginPage from './features/login/LoginPage';
+import RegisterPage from './features/register/RegisterPage';
+import PlantsListPage from './features/plantDetail/PlantsListPage';
+import PlantDetailPage from './features/plantDetail/PlantDetailPage';
+import UserProfilePage from './features/profile/UserProfilePage';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const location = useLocation();
+  const isLoginOrRegister = location.pathname === '/login' || location.pathname === '/register';
+  const isPlantDetail = location.pathname.startsWith('/monitoring/') && location.pathname !== '/monitoring';
+  
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className={`App ${!isLoginOrRegister && !isPlantDetail ? 'pt-32' : ''}`}>
+      {!isLoginOrRegister && !isPlantDetail && <Navbar />}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/monitoring" element={<PlantsListPage />} />
+        <Route path="/monitoring/:plantId" element={<PlantDetailPage />} />
+        <Route path="/profile" element={<UserProfilePage />} />
+      </Routes>
+    </div>
+  );
 }
 
-export default App
+export default App;
