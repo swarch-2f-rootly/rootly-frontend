@@ -1,27 +1,50 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, Mail, Lock, Eye, EyeOff, MapPin } from 'lucide-react';
-
-const departamentos = [
-  'Amazonas', 'Antioquia', 'Arauca', 'Atlántico', 'Bolívar', 'Boyacá', 'Caldas', 'Caquetá', 'Casanare', 'Cauca', 'Cesar', 'Chocó', 'Córdoba', 'Cundinamarca', 'Guainía', 'Guaviare', 'Huila', 'La Guajira', 'Magdalena', 'Meta', 'Nariño', 'Norte de Santander', 'Putumayo', 'Quindío', 'Risaralda', 'San Andrés y Providencia', 'Santander', 'Sucre', 'Tolima', 'Valle del Cauca', 'Vaupés', 'Vichada'
-];
+import { User, Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { useRegisterMutation, type RegisterRequest } from './api';
 
 const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState<RegisterRequest>({
+    email: '',
+    password: '',
+    first_name: '',
+    last_name: '',
+  });
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>('');
+
+  const registerMutation = useRegisterMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    // Simular carga
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Aquí iría la lógica de registro real
-    localStorage.setItem('isAuth', 'true');
-    navigate('/monitoring'); // Redirige a la página principal de plantas
+    setError('');
+
+    if (!formData.email || !formData.password || !formData.first_name || !formData.last_name) {
+      setError('Por favor completa todos los campos');
+      return;
+    }
+
+    try {
+      await registerMutation.mutateAsync(formData);
+      // Navigate to login page on success with success message
+      navigate('/login', { state: { message: 'Cuenta creada exitosamente. Ahora puedes iniciar sesión.' } });
+    } catch (err: any) {
+      // Handle different error types
+      if (err.response?.status === 400) {
+        setError('El email ya está registrado. Intenta con otro email.');
+      } else if (err.response?.status === 422) {
+        setError('Datos inválidos. Verifica la información ingresada.');
+      } else {
+        setError('Error al crear la cuenta. Inténtalo de nuevo.');
+      }
+    }
+  };
+
+  const handleInputChange = (field: keyof RegisterRequest) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, [field]: e.target.value }));
+    if (error) setError(''); // Clear error when user starts typing
   };
 
   return (
@@ -48,29 +71,33 @@ const RegisterForm: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">Nombre completo</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Nombre</label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-            <input 
-              type="text" 
-              placeholder="Tu nombre completo" 
-              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 transition-all" 
+            <input
+              type="text"
+              value={formData.first_name}
+              onChange={handleInputChange('first_name')}
+              placeholder="Tu nombre"
+              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 transition-all"
             />
           </div>
         </motion.div>
-        
+
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
-          <label className="block text-sm font-medium text-slate-700 mb-2">Nombre de usuario</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Apellido</label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-            <input 
-              type="text" 
-              placeholder="usuario123" 
-              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 transition-all" 
+            <input
+              type="text"
+              value={formData.last_name}
+              onChange={handleInputChange('last_name')}
+              placeholder="Tu apellido"
+              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 transition-all"
             />
           </div>
         </motion.div>
@@ -83,14 +110,16 @@ const RegisterForm: React.FC = () => {
           <label className="block text-sm font-medium text-slate-700 mb-2">Correo electrónico</label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-            <input 
-              type="email" 
-              placeholder="tu@email.com" 
-              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 transition-all" 
+            <input
+              type="email"
+              value={formData.email}
+              onChange={handleInputChange('email')}
+              placeholder="tu@email.com"
+              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 transition-all"
             />
           </div>
         </motion.div>
-        
+
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -99,10 +128,12 @@ const RegisterForm: React.FC = () => {
           <label className="block text-sm font-medium text-slate-700 mb-2">Contraseña</label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-            <input 
+            <input
               type={showPassword ? "text" : "password"}
-              placeholder="••••••••" 
-              className="w-full pl-12 pr-12 py-3 rounded-xl border border-slate-200 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 transition-all" 
+              value={formData.password}
+              onChange={handleInputChange('password')}
+              placeholder="••••••••"
+              className="w-full pl-12 pr-12 py-3 rounded-xl border border-slate-200 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 transition-all"
             />
             <button
               type="button"
@@ -113,36 +144,31 @@ const RegisterForm: React.FC = () => {
             </button>
           </div>
         </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-        >
-          <label className="block text-sm font-medium text-slate-700 mb-2">Departamento</label>
-          <div className="relative">
-            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-            <select className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200 transition-all bg-white text-slate-700">
-              <option value="">Selecciona un departamento</option>
-              {departamentos.map(dep => (
-                <option key={dep} value={dep}>{dep}</option>
-              ))}
-            </select>
-          </div>
-        </motion.div>
       </div>
       
-      <motion.button 
-        type="submit" 
+      {error && (
+        <motion.div
+          className="bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded-xl flex items-center gap-2 text-sm"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <AlertCircle className="w-4 h-4" />
+          {error}
+        </motion.div>
+      )}
+
+      <motion.button
+        type="submit"
         className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:from-teal-600 hover:to-emerald-700 transition-all duration-300 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.7, duration: 0.5 }}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        disabled={isLoading}
+        disabled={registerMutation.isPending}
       >
-        {isLoading ? (
+        {registerMutation.isPending ? (
           <>
             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             Creando cuenta...
