@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom"
 import StackCards from '../ui/StackCards'
-import { getPlantById } from '../../data/plantsMock'
+import { usePlant, getPlantImageUrl, useDeletePlant, usePlantDevices } from '../plants/api/plantApi'
 import {
   Droplets,
   Thermometer,
@@ -15,15 +15,18 @@ import {
   Pause,
   Activity,
   Sun,
-  ArrowLeft
+  ArrowLeft,
+  Trash2
 } from "lucide-react"
 
 // Importar componentes separados
 import ClickSpark from '../ui/ClickSpark'
 import TrueFocus from '../ui/TrueFocus'
 import CountUp from '../ui/CountUp'
+import ConfirmModal from '../../components/ui/ConfirmModal'
 import PlantCharts from './PlantCharts'
 import PlantAlerts from './PlantAlerts'
+import PlantDevicesManager from '../devices/components/PlantDevicesManager'
 
 interface PlantData {
   soilHumidity: number
@@ -38,21 +41,44 @@ interface PlantData {
 
 const PlantDetailPage: React.FC = () => {
   const { plantId } = useParams<{ plantId: string }>()
+  const navigate = useNavigate()
   const [isMonitoring, setIsMonitoring] = useState(false)
   const [isClient, setIsClient] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
-  // Encontrar la planta por ID
-  const plant = getPlantById(parseInt(plantId || "1"))
-  
+  // Obtener la planta desde la API
+  const { data: plant, isLoading, error } = usePlant(plantId || '')
+  const { data: plantDevices = [] } = usePlantDevices(plantId || '')
+  const deletePlantMutation = useDeletePlant()
+
+  // Función para eliminar la planta
+  const handleDeletePlant = async () => {
+    if (!plant) return
+
+    try {
+      await deletePlantMutation.mutateAsync(plant.id)
+      navigate('/monitoring')
+    } catch (error) {
+      console.error('Error eliminando planta:', error)
+      alert('Error al eliminar la planta. Por favor, intenta de nuevo.')
+    }
+  }
+
+  // Verificar si la planta tiene microcontrolador asignado
+  const hasMicrocontroller = plantDevices.some(device => device.category === 'microcontroller')
+
+  // Determinar si mostrar datos reales o simulados
+  const shouldShowRealData = hasMicrocontroller
+
   const [currentData, setCurrentData] = useState<PlantData>({
-    soilHumidity: plant?.soilHumidity || 65,
-    airHumidity: plant?.humidity || 72,
-    temperature: plant?.temperature || 24.5,
-    lightLevel: plant?.lightLevel || 850,
+    soilHumidity: shouldShowRealData ? 0 : 65, // Datos reales o simulados según dispositivos
+    airHumidity: shouldShowRealData ? 0 : 72,
+    temperature: shouldShowRealData ? 0 : 24.5,
+    lightLevel: shouldShowRealData ? 0 : 850,
     timestamp: "",
     date: "",
-    location: plant?.location || "Región Central",
-    sensorId: plant?.sensor || "ESP8266-001"
+    location: "Ubicación no disponible", // La API no proporciona ubicación específica
+    sensorId: hasMicrocontroller ? "Microcontrolador conectado" : "Sensor no disponible"
   })
 
   // Inicializar datos de tiempo solo en el cliente
@@ -145,7 +171,36 @@ const PlantDetailPage: React.FC = () => {
     >
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950 p-6 pt-16">
         <div className="max-w-6xl mx-auto space-y-8">
-          {/* Botón de regreso */}
+          {/* Loading State */}
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex justify-center items-center py-12"
+            >
+              <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl p-6">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-600"></div>
+                <span className="text-emerald-700 font-medium">Cargando planta...</span>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-red-50 border border-red-200 rounded-xl p-6 text-center"
+            >
+              <p className="text-red-700 font-medium">Error al cargar la planta</p>
+              <p className="text-red-600 text-sm mt-1">Por favor, intenta de nuevo más tarde</p>
+            </motion.div>
+          )}
+
+          {/* Content - only show when not loading and no error */}
+          {!isLoading && !error && plant && (
+            <>
+              {/* Botón de regreso */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -201,10 +256,17 @@ const PlantDetailPage: React.FC = () => {
                         className="relative"
                       >
                         <div className="w-32 h-32 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-2xl organic-shape overflow-hidden">
-                          <img 
-                            src={plant.image} 
+                          <img
+                            src={getPlantImageUrl(plant)}
                             alt={plant.name}
                             className="w-full h-full object-cover"
+                            onError={(e) => {
+                              // Fallback to default image if plant photo fails to load
+                              const target = e.target as HTMLImageElement;
+                              if (target.src !== 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80') {
+                                target.src = 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=300&q=80';
+                              }
+                            }}
                           />
                         </div>
                         {isMonitoring && (
@@ -224,13 +286,9 @@ const PlantDetailPage: React.FC = () => {
                       </motion.div>
 
                       <div className="text-center space-y-3">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                          plant.statusColor === 'emerald' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300' :
-                          plant.statusColor === 'yellow' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300' :
-                          'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
-                        }`}>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-700">
                           <Activity className="w-3 h-3 mr-1" />
-                          {isMonitoring ? 'Activa' : 'Inactiva'}
+                          Activa
                         </span>
                         <div className="space-y-2">
                           <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -244,28 +302,42 @@ const PlantDetailPage: React.FC = () => {
                           </div>
                         </div>
                         
-                        {/* Control Button */}
-                        <ClickSpark>
-                          <button
-                            onClick={() => setIsMonitoring(!isMonitoring)}
-                            className={`${isMonitoring
-                              ? 'bg-red-500 hover:bg-red-600'
-                              : 'bg-emerald-500 hover:bg-emerald-600'
-                            } text-white shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-2xl font-normal flex items-center gap-2 text-sm`}
-                          >
-                            {isMonitoring ? (
-                              <>
-                                <Pause className="w-4 h-4" />
-                                Pausar
-                              </>
-                            ) : (
-                              <>
-                                <Play className="w-4 h-4" />
-                                Iniciar
-                              </>
-                            )}
-                          </button>
-                        </ClickSpark>
+                        {/* Action Buttons */}
+                        <div className="flex gap-3">
+                          {/* Control Button */}
+                          <ClickSpark>
+                            <button
+                              onClick={() => setIsMonitoring(!isMonitoring)}
+                              className={`${isMonitoring
+                                ? 'bg-red-500 hover:bg-red-600'
+                                : 'bg-emerald-500 hover:bg-emerald-600'
+                              } text-white shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-2xl font-normal flex items-center gap-2 text-sm`}
+                            >
+                              {isMonitoring ? (
+                                <>
+                                  <Pause className="w-4 h-4" />
+                                  Pausar
+                                </>
+                              ) : (
+                                <>
+                                  <Play className="w-4 h-4" />
+                                  Iniciar
+                                </>
+                              )}
+                            </button>
+                          </ClickSpark>
+
+                          {/* Delete Button */}
+                          <ClickSpark>
+                            <button
+                              onClick={() => setShowDeleteModal(true)}
+                              className="bg-red-500 hover:bg-red-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2 rounded-2xl font-normal flex items-center gap-2 text-sm"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Eliminar
+                            </button>
+                          </ClickSpark>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -453,6 +525,15 @@ const PlantDetailPage: React.FC = () => {
           <PlantCharts chartData={chartData} currentData={currentData} />
           <PlantAlerts plant={plant} currentData={currentData} />
 
+          {/* Device Management Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0, duration: 0.6 }}
+          >
+            <PlantDevicesManager plantId={plantId || ''} plantName={plant?.name || 'Planta'} />
+          </motion.div>
+
           {/* Sección Timeline de evolución de la planta 
           {photos.length > 0 && (
             <div className="mt-12">
@@ -475,8 +556,26 @@ const PlantDetailPage: React.FC = () => {
               </div>
             </div>
           )}*/}
+          </>
+          )}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={() => {
+          handleDeletePlant()
+          setShowDeleteModal(false)
+        }}
+        title="Eliminar Planta"
+        message={`¿Estás seguro de que quieres eliminar la planta "${plant?.name}"? Esta acción no se puede deshacer y eliminará todos los datos asociados.`}
+        confirmText="Eliminar Planta"
+        cancelText="Cancelar"
+        confirmVariant="danger"
+        isLoading={deletePlantMutation.isPending}
+      />
     </TrueFocus>
   )
 }

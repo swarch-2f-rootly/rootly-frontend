@@ -1,0 +1,59 @@
+---
+description: Guía para código React moderno, TypeScript, Tailwind, y Server/Client State Management.
+globs:
+  - "src/**/*.{ts,tsx}"
+alwaysApply: true
+---
+
+# ⚛️ Reglas de Implementación de Frontend (React)
+
+## 📌 Pila de Tecnologías Obligatorias
+
+Todo el código debe ser escrito utilizando las siguientes bibliotecas y convenciones:
+
+- **Lenguaje:** **TypeScript** para toda la lógica y componentes.
+- **Estilo:** **Tailwind CSS** (Utility-First). Evitar estilos en línea o CSS Modules a menos que sea estrictamente necesario (ej. para animaciones o componentes de terceros sin soporte nativo de Tailwind).
+- **Rutas:** **`react-router-dom`** (v6+). Usar el patrón de *Layout Routes* para estructuras de aplicación compartidas.
+- **Estado de Servidor (Data Fetching):** **`@tanstack/react-query`**. Utilizar `useQuery`, `useMutation`, y la gestión de caché para todas las llamadas a API.
+- **Validación de Esquemas:** **`Zod`**. Usar `Zod` como fuente única de verdad para la validación de *inputs* (formularios, API responses) y para inferir Tipos de TypeScript.
+- **Gestión de Estado Local/Global:** **`Zustand`**. Usar *stores* de Zustand para el estado global de cliente no relacionado con el servidor.
+
+---
+
+## 🎯 Mejores Prácticas de Codificación (Solid, Bulletproof, etc.)
+
+El objetivo es un código resiliente, performante, y fácil de mantener:
+
+1.  **Separa la Lógica de la Interfaz (Solid Principals / Bulletproof):**
+    * Los componentes de React deben ser puros (pure presentational components), recibiendo datos y *handlers* como *props*.
+    * La lógica de negocio, manejo de estado (Zustand) y *hooks* de datos (TanStack Query) deben residir en *custom hooks* o en la capa de **`features`** o **`domain`**.
+    * Utiliza el patrón **Container/Presenter** (o **Smart/Dumb components**) para separar la lógica de la UI.
+
+2.  **Manejo de Formularios (TanStack Form + Zod):**
+    * Usar **`@tanstack/react-form`** para la gestión del estado del formulario.
+    * Usar el *adapter* de Zod con TanStack Form para la validación de esquemas en tiempo de ejecución.
+    * La validación debe ser *client-side* (Zod) para UX, y asincrónicamente o *server-side* usando el mismo esquema Zod para seguridad (**Bulletproof Data Fetching**).
+
+3.  **Inmutabilidad y Mutaciones:**
+    * Fomenta el principio de **inmutabilidad** en todo el estado, especialmente en Zustand.
+    * En TanStack Query, las operaciones de escritura deben ser `useMutation` y deben invalidar/actualizar la caché de consultas relacionadas con `queryClient.invalidateQueries` o `queryClient.setQueryData` optimista.
+
+4.  **Estructura de Carpetas (Feature-Sliced/Modular):**
+    * Organizar el código por **característica** (`features/user/`, `features/products/`) en lugar de por tipo de archivo (`components/`, `hooks/`).
+    * Dentro de cada característica, se pueden tener subcarpetas como `components`, `api` (para *queries* y *mutations*), `store` (para *stores* de Zustand específicas).
+
+5.  **Tipado con Zod:**
+    * Define esquemas Zod (`*.schema.ts`) para todas las estructuras de datos clave (API, Forms, Zustand State).
+    * **NO** escribir tipos de TypeScript manualmente si se pueden inferir de un esquema Zod. Ejemplo: `type User = z.infer<typeof UserSchema>;`.
+
+6.  **Código Funcional y Legible:**
+    * Prefiere los retornos tempranos (*early returns*) para reducir la anidación de `if`/`else`.
+    * Usar funciones de flecha `const Component: FC<Props> = ({...}) => ...` para componentes funcionales.
+    * Minimiza los efectos secundarios (`useEffect`) y busca patrones de estado de servidor (TanStack Query) o estado de cliente (Zustand) primero.
+
+---
+
+Este conjunto de reglas le proporciona a tu asistente de IA una hoja de ruta clara para generar código que cumpla con todos tus requisitos de tecnología y calidad.
+
+Un tutorial te puede ser útil para ver la implementación de algunas de estas herramientas. Este video explica la combinación de TanStack Form y Zod, que es una de las partes clave de la regla: [TanStack Form y Zod para formularios en React](https://www.youtube.com/watch?v=DxotbweeJqQ).
+http://googleusercontent.com/youtube_content/0
