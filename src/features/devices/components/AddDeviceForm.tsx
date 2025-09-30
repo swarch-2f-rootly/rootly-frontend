@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from '@tanstack/react-form';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCreateDevice } from '../../plants/api/plantApi';
 import { DeviceCreateSchema } from '../../plants/schemas/device.schema';
+import type { DeviceCategory } from '../../plants/schemas/device.schema';
 import {
   ArrowLeft,
   Cpu,
@@ -21,14 +22,25 @@ const AddDeviceForm: React.FC = () => {
       name: '',
       description: '',
       version: '',
-      category: 'sensor' as const,
+      category: 'sensor' as DeviceCategory,
     },
     onSubmit: async ({ value }) => {
       try {
         console.log('Submitting device data:', value);
 
+        // Prepare data for validation (convert empty strings to undefined for optional fields)
+        const dataToValidate = {
+          ...value,
+          description: value.description || undefined,
+          version: value.version || undefined,
+        };
+
+        // Validate with Zod schema
+        const validatedData = DeviceCreateSchema.parse(dataToValidate);
+        console.log('Validated data:', validatedData);
+
         // Create the device
-        const createdDevice = await createDeviceMutation.mutateAsync(value);
+        const createdDevice = await createDeviceMutation.mutateAsync(validatedData);
         console.log('Device created successfully:', createdDevice);
 
         // You could navigate to a device management page or stay here
@@ -113,12 +125,6 @@ const AddDeviceForm: React.FC = () => {
               {/* Name Field */}
               <form.Field
                 name="name"
-                validators={{
-                  onChange: ({ value }) => {
-                    console.log('🔍 Validating device name:', value);
-                    return value && value.length < 1 ? 'El nombre es requerido' : undefined;
-                  },
-                }}
                 children={(field) => (
                   <div>
                     <label
@@ -149,12 +155,6 @@ const AddDeviceForm: React.FC = () => {
               {/* Category Field */}
               <form.Field
                 name="category"
-                validators={{
-                  onChange: ({ value }) => {
-                    console.log('🔍 Validating category:', value);
-                    return !value ? 'La categoría es requerida' : undefined;
-                  },
-                }}
                 children={(field) => (
                   <div>
                     <label
@@ -181,7 +181,7 @@ const AddDeviceForm: React.FC = () => {
                             name="category"
                             value={option.value}
                             checked={field.state.value === option.value}
-                            onChange={() => field.handleChange(option.value as 'microcontroller' | 'sensor')}
+                            onChange={() => field.handleChange(option.value as DeviceCategory)}
                             className="sr-only"
                           />
                           <div className="flex items-center gap-3">
@@ -223,7 +223,7 @@ const AddDeviceForm: React.FC = () => {
                     </label>
                     <textarea
                       id="description"
-                      value={field.state.value}
+                      value={field.state.value || ''}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       rows={3}
@@ -254,7 +254,7 @@ const AddDeviceForm: React.FC = () => {
                     <input
                       id="version"
                       type="text"
-                      value={field.state.value}
+                      value={field.state.value || ''}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all duration-200 text-gray-900 placeholder:text-gray-500"
@@ -281,12 +281,12 @@ const AddDeviceForm: React.FC = () => {
               </Link>
 
               <form.Subscribe
-                selector={(state) => [state.canSubmit, state.isSubmitting, state.errors]}
-                children={([canSubmit, isSubmitting, errors]) => {
+                selector={(state) => [state.canSubmit, state.isSubmitting]}
+                children={([canSubmit, isSubmitting]) => {
                   return (
                     <button
                       type="submit"
-                      disabled={!canSubmit || isSubmitting || createDeviceMutation.isPending}
+                      disabled={!canSubmit || !!isSubmitting || createDeviceMutation.isPending}
                       className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-xl font-medium transition-all duration-200 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                       {isSubmitting || createDeviceMutation.isPending ? (
