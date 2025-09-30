@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .env
+ANALYTICS_METRICS_MODAL.md
+GRAPHQL_INTEGRATION.md
+REALTIME_MONITORING.md
+src/lib/graphql/README.md
