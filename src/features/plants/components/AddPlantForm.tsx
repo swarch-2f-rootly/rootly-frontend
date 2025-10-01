@@ -188,7 +188,7 @@ const AddPlantForm: React.FC = () => {
                     {field.state.meta.errors.length > 0 && (
                       <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
                         <AlertCircle className="h-4 w-4" />
-                        {field.state.meta.errors[0]}
+                        {String(field.state.meta.errors[0])}
                       </p>
                     )}
                   </div>
@@ -233,7 +233,7 @@ const AddPlantForm: React.FC = () => {
                     {field.state.meta.errors.length > 0 && (
                       <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
                         <AlertCircle className="h-4 w-4" />
-                        {field.state.meta.errors[0]}
+                        {String(field.state.meta.errors[0])}
                       </p>
                     )}
                   </div>
@@ -263,7 +263,7 @@ const AddPlantForm: React.FC = () => {
                     {field.state.meta.errors.length > 0 && (
                       <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
                         <AlertCircle className="h-4 w-4" />
-                        {field.state.meta.errors[0]}
+                        {String(field.state.meta.errors[0])}
                       </p>
                     )}
                   </div>
