@@ -185,7 +185,7 @@ const PlantsListPage: React.FC = () => {
                   <Link to={`/monitoring/${plant.id}`} className="block">
                     <div className="relative">
                       <img
-                        src={getPlantImageUrl(plant)}
+                        src={getPlantImageUrl({ id: plant.id, photo_filename: plant.photo_filename ?? '' })}
                         alt={plant.name}
                         className="w-full h-36 object-cover"
                         onError={(e) => {
