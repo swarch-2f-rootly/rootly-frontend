@@ -9,6 +9,7 @@ import PlantDetailPage from './features/plantDetail/PlantDetailPage';
 import UserProfilePage from './features/profile/UserProfilePage';
 import AddPlantForm from './features/plants/components/AddPlantForm';
 import AddDeviceForm from './features/devices/components/AddDeviceForm';
+import DevicesListPage from './features/devices/DevicesListPage';
 import './App.css';
 
 function App() {
@@ -36,6 +37,11 @@ function App() {
         <Route path="/monitoring/:plantId" element={
           <ProtectedRoute>
             <PlantDetailPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/devices" element={
+          <ProtectedRoute>
+            <DevicesListPage />
           </ProtectedRoute>
         } />
         <Route path="/devices/new" element={
