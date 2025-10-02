@@ -16,10 +16,6 @@ const TeamSection: React.FC = () => {
       name: 'Andres Camilo Orduz Lunar'
     },
     {
-      username: 'CarlosSandoval-03',
-      name: 'Carlos Sandoval'
-    },
-    {
       username: 'cstovar',
       name: 'Cristian Tovar'
     },
@@ -38,6 +34,10 @@ const TeamSection: React.FC = () => {
     {
       username: 'ggallegosr',
       name: 'Gabriela Gallegos Rubio'
+    },
+    {
+      username: 'CarlosSandoval-03',
+      name: 'Carlos Sandoval'
     },
     {
       username: 'Srestrero',
