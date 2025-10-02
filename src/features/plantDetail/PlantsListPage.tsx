@@ -33,11 +33,6 @@ const PlantsListPage: React.FC = () => {
   }
 
   const totalPlants = plantsData.length
-  // For now, we'll show basic stats since the API doesn't provide status information
-  // In the future, this could be based on sensor data or other criteria
-  const healthyPlants = Math.floor(totalPlants * 0.7) // Placeholder
-  const alertPlants = Math.floor(totalPlants * 0.2) // Placeholder
-  const criticalPlants = Math.floor(totalPlants * 0.1) // Placeholder
 
   return (
     <div className="bg-gradient-to-br from-cyan-50 to-blue-50 p-6 pb-16 pt-32">
@@ -98,56 +93,25 @@ const PlantsListPage: React.FC = () => {
         {/* Content - only show when not loading and no error */}
         {!isLoading && !error && (
           <>
-            {/* Stats Cards */}
+            {/* Stats Card - Solo Total de Plantas */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-24"
+              className="flex justify-center mt-24"
             >
-              <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-lg rounded-2xl p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-emerald-100 text-xs font-medium">Total Plantas</p>
-                    <p className="text-2xl font-bold">{totalPlants}</p>
+              <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-lg rounded-2xl p-6 max-w-xs w-full">
+                <div className="text-center">
+                  <div className="mb-3">
+                    <Leaf className="h-8 w-8 text-emerald-200 mx-auto" />
                   </div>
-                  <Leaf className="h-6 w-6 text-emerald-200" />
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg rounded-2xl p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-green-100 text-xs font-medium">Saludables</p>
-                    <p className="text-2xl font-bold">{healthyPlants}</p>
-                  </div>
-                  <div className="p-1.5 bg-green-400/30 rounded-full">
-                    <div className="w-3 h-3 bg-green-200 rounded-full"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 shadow-lg rounded-2xl p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-amber-100 text-xs font-medium">En Alerta</p>
-                    <p className="text-2xl font-bold">{alertPlants}</p>
-                  </div>
-                  <div className="p-1.5 bg-amber-400/30 rounded-full">
-                    <div className="w-3 h-3 bg-amber-200 rounded-full"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-red-500 to-rose-600 text-white border-0 shadow-lg rounded-2xl p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-red-100 text-xs font-medium">Críticas</p>
-                    <p className="text-2xl font-bold">{criticalPlants}</p>
-                  </div>
-                  <div className="p-1.5 bg-red-400/30 rounded-full">
-                    <div className="w-3 h-3 bg-red-200 rounded-full"></div>
-                  </div>
+                  <p className="text-emerald-100 text-xs font-medium mb-2">Plantas Monitoreadas</p>
+                  <p className="text-3xl font-bold mb-2">{totalPlants}</p>
+                  <p className="text-emerald-200 text-xs">
+                    {totalPlants === 0 ? 'No hay plantas registradas' :
+                     totalPlants === 1 ? '1 planta en el sistema' :
+                     `${totalPlants} plantas en el sistema`}
+                  </p>
                 </div>
               </div>
             </motion.div>

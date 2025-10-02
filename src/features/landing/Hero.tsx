@@ -435,10 +435,10 @@ const Hero: React.FC = () => {
         <div className="mt-20">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { value: 18.1, suffix: "°C", label: "Temperatura", change: "+2.1%", icon: Thermometer, color: "emerald" },
-              { value: 62, suffix: "%", label: "Humedad", change: "-0.8%", icon: Droplets, color: "teal" },
-              { value: 14, suffix: "", label: "Sensores Activos", change: "+100%", icon: Activity, color: "cyan" },
-              { value: 100.0, suffix: "%", label: "Tiempo Activo", change: "+0.1%", icon: Zap, color: "emerald" }
+              { value: "4", suffix: "", label: "Tipos de Medición", change: "Disponibles", icon: Thermometer, color: "emerald" },
+              { value: "Auto", suffix: "", label: "Monitoreo Automático", change: "Programable", icon: Droplets, color: "teal" },
+              { value: "IoT", suffix: "", label: "Tecnología", change: "Conectividad", icon: Activity, color: "cyan" },
+              { value: "Web", suffix: "", label: "Acceso Remoto", change: "Desde Cualquier Lugar", icon: Zap, color: "emerald" }
             ].map((stat, index) => (
               <motion.div
                 key={index}

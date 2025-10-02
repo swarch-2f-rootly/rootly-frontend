@@ -102,7 +102,9 @@ const PlantDevicesManager: React.FC<PlantDevicesManagerProps> = ({ plantId, plan
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-            <Cpu className="w-6 h-6 text-blue-600" />
+            <div className="w-6 h-6 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <Cpu className="w-4 h-4 text-emerald-600" />
+            </div>
             Dispositivos de {plantName}
           </h3>
           <p className="text-slate-600 text-sm mt-1">
@@ -113,10 +115,10 @@ const PlantDevicesManager: React.FC<PlantDevicesManagerProps> = ({ plantId, plan
         <ClickSpark>
           <button
             onClick={() => setShowAssignForm(!showAssignForm)}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-xl font-medium flex items-center gap-2 transition-all duration-200"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-emerald-200 rounded-xl hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md"
           >
-            <Plus className="w-4 h-4" />
-            Asignar Dispositivo
+            <Plus className="w-4 h-4 text-emerald-600" />
+            <span className="text-sm font-medium text-emerald-700">Asignar Dispositivo</span>
           </button>
         </ClickSpark>
       </div>
@@ -148,14 +150,14 @@ const PlantDevicesManager: React.FC<PlantDevicesManagerProps> = ({ plantId, plan
               <button
                 onClick={handleAssignDevice}
                 disabled={!selectedDeviceId || assignDeviceMutation.isPending}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-400 text-white rounded-xl transition-all duration-300 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {assignDeviceMutation.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <CheckCircle className="w-4 h-4" />
                 )}
-                Asignar
+                <span className="text-sm font-medium">Asignar</span>
               </button>
             </ClickSpark>
 
@@ -165,9 +167,10 @@ const PlantDevicesManager: React.FC<PlantDevicesManagerProps> = ({ plantId, plan
                   setShowAssignForm(false);
                   setSelectedDeviceId('');
                 }}
-                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all duration-300 shadow-sm hover:shadow-md"
               >
-                Cancelar
+                <X className="w-4 h-4" />
+                <span className="text-sm font-medium">Cancelar</span>
               </button>
             </ClickSpark>
           </div>
@@ -185,38 +188,44 @@ const PlantDevicesManager: React.FC<PlantDevicesManagerProps> = ({ plantId, plan
 
       {/* Status Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <div className="bg-white/90 border border-slate-200 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Cpu className="w-5 h-5 text-blue-600" />
-            <span className="font-semibold text-blue-800">Microcontroladores</span>
+            <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <Cpu className="w-4 h-4 text-emerald-600" />
+            </div>
+            <span className="font-semibold text-slate-800">Microcontroladores</span>
           </div>
-          <div className="text-2xl font-bold text-blue-600">{microcontrollers.length}</div>
-          <div className="text-sm text-blue-600">
+          <div className="text-2xl font-bold text-slate-800">{microcontrollers.length}</div>
+          <div className="text-sm text-emerald-600 font-medium">
             {microcontrollers.length === 0 ? 'Sin microcontrolador' :
              microcontrollers.length === 1 ? 'Conectado' : 'Múltiples'}
           </div>
         </div>
 
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+        <div className="bg-white/90 border border-slate-200 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Activity className="w-5 h-5 text-green-600" />
-            <span className="font-semibold text-green-800">Sensores</span>
+            <div className="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
+              <Activity className="w-4 h-4 text-teal-600" />
+            </div>
+            <span className="font-semibold text-slate-800">Sensores</span>
           </div>
-          <div className="text-2xl font-bold text-green-600">{sensors.length}</div>
-          <div className="text-sm text-green-600">
+          <div className="text-2xl font-bold text-slate-800">{sensors.length}</div>
+          <div className="text-sm text-teal-600 font-medium">
             {sensors.length === 0 ? 'Sin sensores' : 'Conectados'}
           </div>
         </div>
 
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <div className="bg-white/90 border border-slate-200 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <CheckCircle className="w-5 h-5 text-slate-600" />
+            <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
+              <CheckCircle className="w-4 h-4 text-cyan-600" />
+            </div>
             <span className="font-semibold text-slate-800">Estado</span>
           </div>
-          <div className={`text-lg font-bold ${microcontrollers.length > 0 ? 'text-green-600' : 'text-amber-600'}`}>
+          <div className={`text-lg font-bold ${microcontrollers.length > 0 ? 'text-emerald-600' : 'text-amber-600'}`}>
             {microcontrollers.length > 0 ? 'Activo' : 'Inactivo'}
           </div>
-          <div className="text-sm text-slate-600">
+          <div className="text-sm text-slate-600 font-medium">
             {microcontrollers.length > 0 ? 'Datos disponibles' : 'Datos simulados'}
           </div>
         </div>
