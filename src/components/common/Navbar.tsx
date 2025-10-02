@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Menu, X, LogOut, User, Home as HomeIcon, Cpu, Leaf } from "lucide-react";
+import { Menu, X, LogOut, User, Cpu, Leaf } from "lucide-react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import iconRootly from '../../assets/iconRootly.png';
