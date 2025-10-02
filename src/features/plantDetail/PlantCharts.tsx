@@ -69,7 +69,7 @@ const PlantCharts: React.FC<PlantChartsProps> = ({
         </motion.p>
       </div>
 
-      <div className="grid lg:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Temperature Chart */}
         <motion.div
           initial={{ opacity: 0, x: -20, scale: 0.9 }}

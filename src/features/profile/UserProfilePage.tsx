@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, Leaf, Edit, Camera, Upload, X, AlertCircle } from 'lucide-react';
+import { User, Mail, Edit, Camera, Upload, X, AlertCircle } from 'lucide-react';
 import { useCurrentUser, useProfilePhoto, useUploadProfilePhoto, useDeleteProfilePhoto, useUpdateProfile } from './api';
-import StackCards from '../ui/StackCards';
 
 
 const UserProfilePage: React.FC = () => {
@@ -42,11 +41,6 @@ const UserProfilePage: React.FC = () => {
     }
   }, [user?.profile_photo_url, profilePhotoBlob, refetchPhoto]);
 
-  // Mock plants data (this would come from another API endpoint)
-  const plantas = [
-    { id: 1, nombre: 'Tomate', icon: <Leaf className="w-8 h-8 text-emerald-600" />, descripcion: 'Planta de tomate saludable.', color: 'bg-gradient-to-br from-emerald-500 to-emerald-600' },
-    { id: 2, nombre: 'Lechuga', icon: <Leaf className="w-8 h-8 text-teal-600" />, descripcion: 'Lechuga fresca y lista para cosechar.', color: 'bg-gradient-to-br from-teal-500 to-teal-600' },
-  ];
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -228,7 +222,7 @@ const UserProfilePage: React.FC = () => {
 
                 <div className="flex items-center gap-3 p-4 rounded-lg bg-emerald-50/50">
                   <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-100">
-                    <Leaf className="h-5 w-5 text-emerald-600" />
+                    <User className="h-5 w-5 text-emerald-600" />
                   </div>
                   <div className="text-left">
                     <div className="text-sm text-slate-500">Roles</div>
@@ -243,7 +237,7 @@ const UserProfilePage: React.FC = () => {
             {/* Stats Row */}
             <div className="flex items-center justify-center gap-8 pt-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-emerald-600">{plantas.length}</div>
+                <div className="text-3xl font-bold text-emerald-600">0</div>
                 <div className="text-sm text-slate-500">Plantas</div>
               </div>
               <div className="w-px h-12 bg-slate-200"></div>
@@ -277,38 +271,6 @@ const UserProfilePage: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Plants Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ delay: 0.2, duration: 0.8 }} 
-          className="space-y-6"
-        >
-          <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-            <Leaf className="w-6 h-6 text-emerald-500" />
-            Plantas Asociadas
-          </h3>
-          
-          <div className="flex flex-wrap gap-8 justify-center">
-            {plantas.map(planta => (
-              <StackCards
-                key={planta.id}
-                cardsData={[
-                  {
-                    id: planta.id,
-                    icon: planta.icon,
-                    title: planta.nombre,
-                    content: planta.descripcion,
-                    color: planta.color
-                  }
-                ]}
-                cardDimensions={{ width: 220, height: 140 }}
-                randomRotation={false}
-                sendToBackOnClick={false}
-              />
-            ))}
-          </div>
-        </motion.div>
 
         {/* Photo Upload Modal */}
         {showPhotoModal && (

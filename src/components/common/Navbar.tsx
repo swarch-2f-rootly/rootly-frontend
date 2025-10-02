@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Menu, X, LogOut, User, Home as HomeIcon, Cpu } from "lucide-react";
+import { Menu, X, LogOut, User, Home as HomeIcon, Cpu, Leaf } from "lucide-react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -32,8 +32,8 @@ const Navbar: React.FC = () => {
       </div>
       {isAuthenticated ? (
         <div className="hidden md:flex items-center space-x-8">
-          <Link to="/monitoring" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 text-sm"><HomeIcon className="w-4 h-4" /> Home</Link>
-          <Link to="/devices/new" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 text-sm"><Cpu className="w-4 h-4" /> Dispositivos</Link>
+          <Link to="/monitoring" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 text-sm"><Leaf className="w-4 h-4" /> Plantas</Link>
+          <Link to="/devices" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 text-sm"><Cpu className="w-4 h-4" /> Dispositivos</Link>
           <Link to="/profile" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 text-sm"><User className="w-4 h-4" /> Perfil</Link>
           <button onClick={handleLogout} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 text-sm"><LogOut className="w-4 h-4" /> Logout</button>
         </div>
@@ -62,7 +62,8 @@ const Navbar: React.FC = () => {
         >
           {isAuthenticated ? (
             <>
-              <Link to="/monitoring" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}><HomeIcon className="w-4 h-4" /> Home</Link>
+              <Link to="/monitoring" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}><Leaf className="w-4 h-4" /> Plantas</Link>
+              <Link to="/devices" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}><Cpu className="w-4 h-4" /> Dispositivos</Link>
               <Link to="/profile" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal flex items-center gap-1 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}><User className="w-4 h-4" /> Perfil</Link>
               <button onClick={handleMobileLogout} className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 w-4/5 text-center text-sm"><LogOut className="w-4 h-4" /> Logout</button>
             </>
