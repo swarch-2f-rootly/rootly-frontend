@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Menu, X, LogOut, User, Home as HomeIcon, Cpu } from "lucide-react";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import iconRootly from '../../assets/iconRootly.png';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,7 +28,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="w-full px-6 py-4 flex items-center justify-between bg-white/80 dark:bg-slate-900 shadow-md fixed top-0 left-0 z-50 backdrop-blur-md">
       <div className="flex items-center gap-2 cursor-pointer" onClick={handleLogoClick}>
-        <img src="/src/assets/iconRootly.png" alt="Logo" className="h-12 w-12" />
+        <img src={iconRootly} alt="Logo" className="h-12 w-12" />
         <span className="font-extrabold text-2xl md:text-3xl" style={{ color: '#10B981' }}>Rootly</span>
       </div>
       {isAuthenticated ? (
@@ -39,7 +40,7 @@ const Navbar: React.FC = () => {
         </div>
       ) : (
         <div className="hidden md:flex items-center space-x-8">
-          <a href="#platform" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal text-sm">Plataforma</a>
+          <a href="#collaboration-section" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal text-sm">Plataforma</a>
           <a href="#about-us" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal text-sm">Sobre nosotros</a>
           <Link to="/login" className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 text-sm">Iniciar sesión</Link>
           <Link to="/register" className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 text-sm">Registrarse</Link>
@@ -68,7 +69,7 @@ const Navbar: React.FC = () => {
             </>
           ) : (
             <>
-              <a href="#platform" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}>Plataforma</a>
+              <a href="#collaboration-section" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}>Plataforma</a>
               <a href="#about-us" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 transition-colors font-normal w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}>Sobre nosotros</a>
               <Link to="/login" className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}>Iniciar sesión</Link>
               <Link to="/register" className="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 px-3 py-1.5 rounded-lg font-normal flex items-center gap-2 w-4/5 text-center text-sm" onClick={() => setIsMenuOpen(false)}>Registrarse</Link>

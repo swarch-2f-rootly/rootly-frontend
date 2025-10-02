@@ -333,7 +333,7 @@ const Hero: React.FC = () => {
                 count={6}
                 duration={500}
               >
-                <Link to="/login">
+                <a href="#collaboration-section">
                   <motion.button 
                     whileHover={{ scale: 1.02 }} 
                     whileTap={{ scale: 0.98 }} 
@@ -341,7 +341,7 @@ const Hero: React.FC = () => {
                   >
                     Explorar la Plataforma
                   </motion.button>
-                </Link>
+                </a>
               </ClickSpark>
             </motion.div>
 
