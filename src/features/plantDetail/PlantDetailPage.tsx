@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import { useParams, useNavigate } from "react-router-dom"
 import { usePlant, useDeletePlant, usePlantDevices } from '../plants/api/plantApi'
 import { usePlantChartData } from '../../lib/graphql/hooks'
-import { useRealtimeMonitoring } from '../../lib/graphql/realtime-queries'
+import { useRealtimeMonitoring, useLatestMeasurement } from '../../lib/graphql/realtime-queries'
 import {
   Droplets,
   Thermometer,
@@ -69,20 +69,35 @@ const PlantDetailPage: React.FC = () => {
     hasLight
   } = usePlantChartData(controllerId)
 
-  // Hook para datos históricos y gráficas (habilitado solo cuando hay controllerId)
+  // Hook para datos históricos y gráficas (siempre habilitado si hay controllerId para mostrar gráficas)
   const {
     chartData: historicalChartData,
-    latestValues: realtimeLatestValues,
-    hasTemperatureData,
-    hasAirHumidityData,
-    hasSoilHumidityData,
-    hasLightData,
   } = useRealtimeMonitoring(
     controllerId, 
     ['temperature', 'air_humidity', 'soil_humidity', 'light_intensity'], 
     !!controllerId, // Habilitado si hay controllerId
     24 // Últimas 24 horas
   )
+
+  // Hook para monitoreo en tiempo real - UNA llamada con polling cada 3 segundos
+  // El backend devuelve la última medición disponible (cualquier tipo de métrica)
+  const { 
+    data: latestMeasurementData, 
+    isLoading: isLoadingLatest,
+    error: latestError 
+  } = useLatestMeasurement(
+    controllerId,
+    isMonitoring && !!controllerId,
+    3000 // Polling cada 3 segundos
+  )
+
+  // Estado para acumular las métricas recibidas del polling
+  const [realtimeMetrics, setRealtimeMetrics] = useState<{
+    temperature?: number
+    airHumidity?: number
+    soilHumidity?: number
+    lightLevel?: number
+  }>({})
 
   const handleDeletePlant = async () => {
     if (!plant) return
@@ -102,13 +117,42 @@ const PlantDetailPage: React.FC = () => {
   // Determinar el mensaje de estado del sensor usando useMemo para evitar recreación
   const sensorStatus = useMemo(() => {
     if (controllerId) {
+      // En modo monitoreo, mostrar el estado de la última medición
+      if (isMonitoring) {
+        if (latestMeasurementData?.getLatestMeasurement?.measurement) {
+          const status = latestMeasurementData.getLatestMeasurement.status
+          const ageMinutes = latestMeasurementData.getLatestMeasurement.dataAgeMinutes
+          const metricName = latestMeasurementData.getLatestMeasurement.measurement.metricName
+          return `📡 ${controllerId} - ${status} (${metricName}, hace ${ageMinutes} min)`
+        }
+        if (latestError) {
+          return `⚠️ ${controllerId} - Error obteniendo datos`
+        }
+        if (isLoadingLatest) {
+          return `🔄 ${controllerId} - Consultando...`
+        }
+        return `⚠️ ${controllerId} - Sin datos disponibles`
+      }
+      
+      // En modo normal, mostrar estado de datos analíticos
       if (hasData || hasTemperature || hasHumidity || hasSoilHumidity || hasLight) {
         return `✅ Microcontrolador: ${controllerId} - Datos obtenidos`;
       }
       return `⚠️ Microcontrolador: ${controllerId} - Esperando datos...`;
     }
     return "❌ Sin microcontrolador asignado";
-  }, [controllerId, hasData, hasTemperature, hasHumidity, hasSoilHumidity, hasLight]);
+  }, [
+    controllerId, 
+    hasData, 
+    hasTemperature, 
+    hasHumidity, 
+    hasSoilHumidity, 
+    hasLight,
+    isMonitoring,
+    latestMeasurementData,
+    latestError,
+    isLoadingLatest
+  ]);
 
   const [currentData, setCurrentData] = useState<PlantData>({
     soilHumidity: 0,
@@ -147,23 +191,69 @@ const PlantDetailPage: React.FC = () => {
     analyticsData?.lightLevel
   ])
 
-  // Actualizar con datos en tiempo real (solo valores primitivos como dependencias)
+  // Limpiar métricas acumuladas cuando se detiene el monitoreo
   useEffect(() => {
-    if (isMonitoring && realtimeLatestValues) {
-      setCurrentData(prev => ({
-        ...prev,
-        temperature: realtimeLatestValues.temperature || prev.temperature,
-        airHumidity: realtimeLatestValues.airHumidity || prev.airHumidity,
-        soilHumidity: realtimeLatestValues.soilHumidity || prev.soilHumidity,
-        lightLevel: realtimeLatestValues.lightLevel || prev.lightLevel,
-      }))
+    if (!isMonitoring) {
+      setRealtimeMetrics({})
     }
+  }, [isMonitoring])
+
+  // Acumular métricas recibidas del polling según el metricName
+  useEffect(() => {
+    if (!isMonitoring || !latestMeasurementData?.getLatestMeasurement?.measurement) return
+
+    const measurement = latestMeasurementData.getLatestMeasurement.measurement
+    
+    // Actualizar tanto el estado acumulativo como currentData
+    setRealtimeMetrics(prev => {
+      const updates = { ...prev }
+      
+      switch (measurement.metricName) {
+        case 'temperature':
+          updates.temperature = measurement.value
+          break
+        case 'air_humidity':
+          updates.airHumidity = measurement.value
+          break
+        case 'soil_humidity':
+          updates.soilHumidity = measurement.value
+          break
+        case 'light_intensity':
+          updates.lightLevel = measurement.value
+          break
+      }
+      
+      return updates
+    })
+
+    // Actualizar currentData directamente aquí
+    setCurrentData(prev => {
+      const updates: Partial<PlantData> = {
+        timestamp: new Date().toLocaleTimeString('es-ES'),
+        date: new Date().toLocaleDateString('es-ES')
+      }
+
+      switch (measurement.metricName) {
+        case 'temperature':
+          updates.temperature = measurement.value
+          break
+        case 'air_humidity':
+          updates.airHumidity = measurement.value
+          break
+        case 'soil_humidity':
+          updates.soilHumidity = measurement.value
+          break
+        case 'light_intensity':
+          updates.lightLevel = measurement.value
+          break
+      }
+
+      return { ...prev, ...updates }
+    })
   }, [
     isMonitoring,
-    realtimeLatestValues?.temperature,
-    realtimeLatestValues?.airHumidity,
-    realtimeLatestValues?.soilHumidity,
-    realtimeLatestValues?.lightLevel
+    latestMeasurementData?.getLatestMeasurement?.measurement?.value,
+    latestMeasurementData?.getLatestMeasurement?.measurement?.metricName
   ])
 
   useEffect(() => {
@@ -175,25 +265,6 @@ const PlantDetailPage: React.FC = () => {
       date: now.toLocaleDateString('es-ES')
     }))
   }, [])
-
-  useEffect(() => {
-    if (!isMonitoring || !hasMicrocontroller) return
-
-    const interval = setInterval(() => {
-      setCurrentData(prev => ({
-        ...prev,
-        soilHumidity: Math.max(30, Math.min(90, prev.soilHumidity + (Math.random() - 0.5) * 10)),
-        airHumidity: Math.max(40, Math.min(85, prev.airHumidity + (Math.random() - 0.5) * 8)),
-        temperature: Math.max(18, Math.min(35, prev.temperature + (Math.random() - 0.5) * 2)),
-        lightLevel: Math.max(0, Math.min(2000, prev.lightLevel + (Math.random() - 0.5) * 200)),
-        timestamp: new Date().toLocaleTimeString('es-ES'),
-        date: new Date().toLocaleDateString('es-ES')
-      }))
-    }, 3000)
-
-    return () => clearInterval(interval)
-  }, [isMonitoring, hasMicrocontroller])
-
 
   const getStatusColor = (value: number, type: 'humidity' | 'temperature' | 'light') => {
     if (type === 'humidity') {
@@ -261,44 +332,44 @@ const PlantDetailPage: React.FC = () => {
                 icon={<Thermometer className="w-6 h-6" />}
                 title="Temperatura"
                 subtitle="Ambiente"
-                value={isMonitoring ? (realtimeLatestValues?.temperature || currentData.temperature) : (getMetricAverage('temperature') || currentData.temperature)}
+                value={isMonitoring ? currentData.temperature : (getMetricAverage('temperature') || currentData.temperature)}
                 unit="°C"
                 colorClass={getStatusColor(currentData.temperature, 'temperature')}
                 delay={0.8}
-                hasData={isMonitoring ? hasTemperatureData : hasTemperature}
+                hasData={isMonitoring ? (realtimeMetrics.temperature !== undefined) : hasTemperature}
                 onClick={() => setOpenModal('temperature')}
               />
               <SensorDataCard
                 icon={<Droplets className="w-6 h-6" />}
                 title="Humedad del Suelo"
                 subtitle="Substrato"
-                value={isMonitoring ? (realtimeLatestValues?.soilHumidity || currentData.soilHumidity) : (getMetricAverage('soil_humidity') || currentData.soilHumidity)}
+                value={isMonitoring ? currentData.soilHumidity : (getMetricAverage('soil_humidity') || currentData.soilHumidity)}
                 unit="%"
                 colorClass={getStatusColor(currentData.soilHumidity, 'humidity')}
                 delay={1.0}
-                hasData={isMonitoring ? hasSoilHumidityData : hasSoilHumidity}
+                hasData={isMonitoring ? (realtimeMetrics.soilHumidity !== undefined) : hasSoilHumidity}
                 onClick={() => setOpenModal('soil_humidity')}
               />
               <SensorDataCard
                 icon={<Wind className="w-6 h-6" />}
                 title="Humedad del Aire"
                 subtitle="Ambiente"
-                value={isMonitoring ? (realtimeLatestValues?.airHumidity || currentData.airHumidity) : (getMetricAverage('air_humidity') || currentData.airHumidity)}
+                value={isMonitoring ? currentData.airHumidity : (getMetricAverage('air_humidity') || currentData.airHumidity)}
                 unit="%"
                 colorClass={getStatusColor(currentData.airHumidity, 'humidity')}
                 delay={1.2}
-                hasData={isMonitoring ? hasAirHumidityData : hasHumidity}
+                hasData={isMonitoring ? (realtimeMetrics.airHumidity !== undefined) : hasHumidity}
                 onClick={() => setOpenModal('air_humidity')}
               />
               <SensorDataCard
                 icon={<Sun className="w-6 h-6" />}
                 title="Luminosidad"
                 subtitle="Lux"
-                value={isMonitoring ? (realtimeLatestValues?.lightLevel || currentData.lightLevel) : (getMetricAverage('light_intensity') || currentData.lightLevel)}
+                value={isMonitoring ? currentData.lightLevel : (getMetricAverage('light_intensity') || currentData.lightLevel)}
                 unit=" lux"
                 colorClass={getStatusColor(currentData.lightLevel, 'light')}
                 delay={1.4}
-                hasData={isMonitoring ? hasLightData : hasLight}
+                hasData={isMonitoring ? (realtimeMetrics.lightLevel !== undefined) : hasLight}
                 onClick={() => setOpenModal('light_intensity')}
               />
             </div>

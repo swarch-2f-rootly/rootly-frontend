@@ -28,6 +28,28 @@ export const GET_HISTORICAL_MEASUREMENTS = gql`
   }
 `;
 
+// Query para obtener la última medición de un controlador
+// El backend devuelve la última medición disponible (cualquier tipo)
+// El metricName viene en la respuesta para saber qué tipo de métrica es
+export const GET_LATEST_MEASUREMENT = gql`
+  query GetLatestMeasurement($controllerId: String!) {
+    getLatestMeasurement(controllerId: $controllerId) {
+      controllerId
+      status
+      lastChecked
+      dataAgeMinutes
+      measurement {
+        metricName
+        value
+        unit
+        calculatedAt
+        controllerId
+        description
+      }
+    }
+  }
+`;
+
 // Tipos para las mediciones históricas
 export interface HistoricalDataPoint {
   timestamp: string;
@@ -61,6 +83,48 @@ export interface HistoricalMeasurementsResponse {
     totalPoints: number;
     filtersApplied: HistoricalMeasurementsFilters;
   };
+}
+
+// Tipos para la última medición
+export interface LatestMeasurement {
+  metricName: string;
+  value: number;
+  unit: string;
+  calculatedAt: string;
+  controllerId: string;
+  description?: string;
+}
+
+export interface LatestMeasurementResponse {
+  getLatestMeasurement: {
+    controllerId: string;
+    status: string;
+    lastChecked: string;
+    dataAgeMinutes: number;
+    measurement: LatestMeasurement | null;
+  };
+}
+
+// Hook para obtener la última medición de un controlador
+// Hace polling y devuelve la última medición disponible (cualquier tipo)
+export function useLatestMeasurement(
+  controllerId: string,
+  enabled: boolean = false,
+  pollingInterval: number = 3000 // 3 segundos por defecto
+) {
+  return useGraphQLQuery<LatestMeasurementResponse>(
+    [...graphqlKeys.all, 'latest-measurement', controllerId],
+    GET_LATEST_MEASUREMENT,
+    { controllerId },
+    {
+      enabled: enabled && !!controllerId,
+      staleTime: 0, // Siempre considerar datos como stale para refetch
+      gcTime: 30 * 1000, // 30 segundos en caché
+      refetchInterval: enabled ? pollingInterval : false, // Polling cuando está habilitado
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
+  );
 }
 
 // Hook para obtener mediciones históricas de un parámetro específico
