@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Users } from 'lucide-react';
 import TeamSection from '../../components/team/TeamSection';
+import campesinosImage from '../../assets/campesinos.jpg';
 
 const AboutUs: React.FC = () => (
   <motion.section
@@ -29,7 +30,7 @@ const AboutUs: React.FC = () => (
       </div>
       {/* Imagen */}
       <div className="flex-1 flex justify-center">
-        <img src="/src/assets/campesinos.jpg" alt="Campesinos" className="rounded-2xl shadow-lg max-h-96 object-cover border-4 border-emerald-200" />
+        <img src={campesinosImage} alt="Campesinos" className="rounded-2xl shadow-lg max-h-96 object-cover border-4 border-emerald-200" />
       </div>
     </div>
     {/* Sección del equipo */}
