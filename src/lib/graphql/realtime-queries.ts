@@ -152,16 +152,37 @@ export function useRealtimeMonitoring(
   controllerId: string,
   parameters: string[] = ['temperature', 'air_humidity', 'soil_humidity', 'light_intensity'],
   enabled: boolean = false,
-  hours: number = 24 // Por defecto últimas 24 horas para las gráficas
+  hours: number = 24, // Por defecto últimas 24 horas para las gráficas
+  refreshInterval: number = 5 * 60 * 1000 // Refrescar cada 5 minutos por defecto
 ) {
-  // Memoizar las fechas para evitar recrearlas en cada render
-  const { startTime, endTime } = React.useMemo(() => {
+  // Recalcular las fechas periódicamente usando un estado que se actualiza
+  const [dates, setDates] = React.useState(() => {
     const now = new Date();
     return {
       startTime: new Date(now.getTime() - hours * 60 * 60 * 1000).toISOString(),
       endTime: now.toISOString()
     };
-  }, [hours]); // Solo recalcular si cambia hours
+  });
+
+  // Actualizar fechas cuando cambia el intervalo de horas
+  React.useEffect(() => {
+    const updateDates = () => {
+      const now = new Date();
+      setDates({
+        startTime: new Date(now.getTime() - hours * 60 * 60 * 1000).toISOString(),
+        endTime: now.toISOString()
+      });
+    };
+
+    // Actualizar inmediatamente
+    updateDates();
+
+    // Actualizar periódicamente
+    const interval = setInterval(updateDates, refreshInterval);
+    return () => clearInterval(interval);
+  }, [hours, refreshInterval]);
+
+  const { startTime, endTime } = dates;
 
   // Crear queries para cada parámetro
   const temperatureQuery = useHistoricalMeasurements(
