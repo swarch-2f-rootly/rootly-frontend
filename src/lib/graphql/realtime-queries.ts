@@ -28,6 +28,28 @@ export const GET_HISTORICAL_MEASUREMENTS = gql`
   }
 `;
 
+// Query para obtener la última medición de un controlador
+// El backend devuelve la última medición disponible (cualquier tipo)
+// El metricName viene en la respuesta para saber qué tipo de métrica es
+export const GET_LATEST_MEASUREMENT = gql`
+  query GetLatestMeasurement($controllerId: String!) {
+    getLatestMeasurement(controllerId: $controllerId) {
+      controllerId
+      status
+      lastChecked
+      dataAgeMinutes
+      measurement {
+        metricName
+        value
+        unit
+        calculatedAt
+        controllerId
+        description
+      }
+    }
+  }
+`;
+
 // Tipos para las mediciones históricas
 export interface HistoricalDataPoint {
   timestamp: string;
@@ -63,6 +85,48 @@ export interface HistoricalMeasurementsResponse {
   };
 }
 
+// Tipos para la última medición
+export interface LatestMeasurement {
+  metricName: string;
+  value: number;
+  unit: string;
+  calculatedAt: string;
+  controllerId: string;
+  description?: string;
+}
+
+export interface LatestMeasurementResponse {
+  getLatestMeasurement: {
+    controllerId: string;
+    status: string;
+    lastChecked: string;
+    dataAgeMinutes: number;
+    measurement: LatestMeasurement | null;
+  };
+}
+
+// Hook para obtener la última medición de un controlador
+// Hace polling y devuelve la última medición disponible (cualquier tipo)
+export function useLatestMeasurement(
+  controllerId: string,
+  enabled: boolean = false,
+  pollingInterval: number = 3000 // 3 segundos por defecto
+) {
+  return useGraphQLQuery<LatestMeasurementResponse>(
+    [...graphqlKeys.all, 'latest-measurement', controllerId],
+    GET_LATEST_MEASUREMENT,
+    { controllerId },
+    {
+      enabled: enabled && !!controllerId,
+      staleTime: 0, // Siempre considerar datos como stale para refetch
+      gcTime: 30 * 1000, // 30 segundos en caché
+      refetchInterval: enabled ? pollingInterval : false, // Polling cuando está habilitado
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
+  );
+}
+
 // Hook para obtener mediciones históricas de un parámetro específico
 export function useHistoricalMeasurements(
   input: HistoricalQueryInput,
@@ -88,16 +152,37 @@ export function useRealtimeMonitoring(
   controllerId: string,
   parameters: string[] = ['temperature', 'air_humidity', 'soil_humidity', 'light_intensity'],
   enabled: boolean = false,
-  hours: number = 24 // Por defecto últimas 24 horas para las gráficas
+  hours: number = 24, // Por defecto últimas 24 horas para las gráficas
+  refreshInterval: number = 5 * 60 * 1000 // Refrescar cada 5 minutos por defecto
 ) {
-  // Memoizar las fechas para evitar recrearlas en cada render
-  const { startTime, endTime } = React.useMemo(() => {
+  // Recalcular las fechas periódicamente usando un estado que se actualiza
+  const [dates, setDates] = React.useState(() => {
     const now = new Date();
     return {
       startTime: new Date(now.getTime() - hours * 60 * 60 * 1000).toISOString(),
       endTime: now.toISOString()
     };
-  }, [hours]); // Solo recalcular si cambia hours
+  });
+
+  // Actualizar fechas cuando cambia el intervalo de horas
+  React.useEffect(() => {
+    const updateDates = () => {
+      const now = new Date();
+      setDates({
+        startTime: new Date(now.getTime() - hours * 60 * 60 * 1000).toISOString(),
+        endTime: now.toISOString()
+      });
+    };
+
+    // Actualizar inmediatamente
+    updateDates();
+
+    // Actualizar periódicamente
+    const interval = setInterval(updateDates, refreshInterval);
+    return () => clearInterval(interval);
+  }, [hours, refreshInterval]);
+
+  const { startTime, endTime } = dates;
 
   // Crear queries para cada parámetro
   const temperatureQuery = useHistoricalMeasurements(

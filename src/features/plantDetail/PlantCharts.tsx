@@ -81,12 +81,9 @@ const PlantCharts: React.FC<PlantChartsProps> = ({
           }}
           className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 shadow-lg rounded-2xl p-6 relative overflow-hidden group"
         >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <Thermometer className="w-5 h-5 text-orange-500" />
-              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Temperatura</h3>
-            </div>
-            <span className="text-2xl font-bold text-orange-600">{currentData.temperature.toFixed(1)}°C</span>
+          <div className="flex items-center space-x-2 mb-4">
+            <Thermometer className="w-5 h-5 text-orange-500" />
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Temperatura</h3>
           </div>
           {temperatureData && temperatureData.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
@@ -142,12 +139,9 @@ const PlantCharts: React.FC<PlantChartsProps> = ({
           }}
           className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 shadow-lg rounded-2xl p-6 relative overflow-hidden group"
         >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <Droplets className="w-5 h-5 text-blue-500" />
-              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Humedad</h3>
-            </div>
-            <span className="text-2xl font-bold text-blue-600">{currentData.airHumidity.toFixed(0)}%</span>
+          <div className="flex items-center space-x-2 mb-4">
+            <Droplets className="w-5 h-5 text-blue-500" />
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Humedad</h3>
           </div>
           {humidityData && humidityData.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
@@ -203,12 +197,9 @@ const PlantCharts: React.FC<PlantChartsProps> = ({
           }}
           className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 shadow-lg rounded-2xl p-6 relative overflow-hidden group"
         >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <Droplets className="w-5 h-5 text-red-500" />
-              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Humedad Suelo</h3>
-            </div>
-            <span className="text-2xl font-bold text-red-600">{currentData.soilHumidity.toFixed(0)}%</span>
+          <div className="flex items-center space-x-2 mb-4">
+            <Droplets className="w-5 h-5 text-red-500" />
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Humedad Suelo</h3>
           </div>
           {soilHumidityData && soilHumidityData.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
@@ -264,12 +255,9 @@ const PlantCharts: React.FC<PlantChartsProps> = ({
           }}
           className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 shadow-lg rounded-2xl p-6 relative overflow-hidden group"
         >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <Sun className="w-5 h-5 text-yellow-500" />
-              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Luminosidad</h3>
-            </div>
-            <span className="text-2xl font-bold text-yellow-600">{currentData.lightLevel.toFixed(0)} lux</span>
+          <div className="flex items-center space-x-2 mb-4">
+            <Sun className="w-5 h-5 text-yellow-500" />
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Luminosidad</h3>
           </div>
           {lightData && lightData.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
