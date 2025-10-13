@@ -18,8 +18,10 @@ import {
   type DeviceResponse
 } from '../schemas/device.schema';
 
-// API base URL for plants service - using proxy in development
-export const PLANTS_API_BASE_URL = import.meta.env.VITE_PLANTS_BASE_URL || '';
+import { getApiUrl } from '../../../lib/config/api';
+
+// Use API Gateway for all requests
+export const PLANTS_API_BASE_URL = getApiUrl('gateway');
 
 // Query Keys
 export const plantKeys = {

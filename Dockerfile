@@ -19,8 +19,8 @@ RUN npm run build
 # Production stage
 FROM node:18-alpine
 
-# Install serve globally
-RUN npm install -g serve
+# Install curl for healthchecks and serve to host static files
+RUN apk add --no-cache curl && npm install -g serve
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist /app/dist
