@@ -23,8 +23,15 @@ const TeamCard: React.FC<TeamCardProps> = ({ username, delay = 0 }) => {
   const [profile, setProfile] = useState<GitHubProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     const fetchProfile = async () => {
       try {
         const response = await fetch(`https://api.github.com/users/${username}`);
@@ -42,13 +49,13 @@ const TeamCard: React.FC<TeamCardProps> = ({ username, delay = 0 }) => {
     };
 
     fetchProfile();
-  }, [username]);
+  }, [username, isMounted]);
 
-  if (loading) {
+  if (loading || !isMounted) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={isMounted ? { opacity: 1, y: 0 } : {}}
         transition={{ delay, duration: 0.6 }}
         className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-emerald-100 hover:shadow-xl transition-all duration-300 min-h-[250px] flex items-center justify-center"
       >
@@ -65,7 +72,7 @@ const TeamCard: React.FC<TeamCardProps> = ({ username, delay = 0 }) => {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={isMounted ? { opacity: 1, y: 0 } : {}}
         transition={{ delay, duration: 0.6 }}
         className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-emerald-100 hover:shadow-xl transition-all duration-300 min-h-[250px] flex items-center justify-center"
       >
@@ -89,9 +96,9 @@ const TeamCard: React.FC<TeamCardProps> = ({ username, delay = 0 }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={isMounted ? { opacity: 1, y: 0 } : {}}
       transition={{ delay, duration: 0.6 }}
-      whileHover={{ y: -5 }}
+      whileHover={isMounted ? { y: -5 } : {}}
       className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-emerald-100 hover:shadow-xl transition-all duration-300 group"
     >
       {/* Avatar */}
@@ -151,8 +158,8 @@ const TeamCard: React.FC<TeamCardProps> = ({ username, delay = 0 }) => {
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center justify-center w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-3 py-2 rounded-lg font-medium transition-all duration-300 group-hover:shadow-lg text-sm"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={isMounted ? { scale: 1.02 } : {}}
+        whileTap={isMounted ? { scale: 0.98 } : {}}
       >
         <Github className="w-3 h-3 mr-1" />
         GitHub
