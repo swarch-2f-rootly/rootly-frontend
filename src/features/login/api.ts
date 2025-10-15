@@ -30,8 +30,10 @@ export const TokenResponseSchema = z.object({
 export type LoginRequest = z.infer<typeof LoginRequestSchema>;
 export type TokenResponse = z.infer<typeof TokenResponseSchema>;
 
-// API base URL from environment or default to localhost:8001
-const API_BASE_URL = import.meta.env.VITE_AUTH_BASE_URL || 'http://localhost:8001';
+import { getApiUrl } from '../../lib/config/api';
+
+// Use API Gateway for all requests
+const API_BASE_URL = getApiUrl('gateway');
 
 /**
  * Login API call

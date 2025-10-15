@@ -26,8 +26,10 @@ export const UserResponseSchema = z.object({
 export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
 export type UserResponse = z.infer<typeof UserResponseSchema>;
 
-// API base URL from environment or default to localhost:8001
-const API_BASE_URL = import.meta.env.VITE_AUTH_BASE_URL || 'http://localhost:8001';
+import { getApiUrl } from '../../lib/config/api';
+
+// Use API Gateway for all requests
+const API_BASE_URL = getApiUrl('gateway');
 
 /**
  * Register API call
