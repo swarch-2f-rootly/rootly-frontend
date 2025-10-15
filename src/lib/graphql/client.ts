@@ -2,8 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 
-// Base GraphQL endpoint - using analytics service
-export const GRAPHQL_ENDPOINT = `${import.meta.env.VITE_DATA_ANALYTICS_BASE_URL || 'http://localhost:8000'}/api/v1/graphql`;
+import { GRAPHQL_ENDPOINT } from '../config/api';
 
 // Create GraphQL client instance
 export const graphqlClient = new GraphQLClient(GRAPHQL_ENDPOINT, {

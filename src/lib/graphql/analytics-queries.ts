@@ -157,7 +157,7 @@ export function useSingleMetricReport(
 /**
  * Hook para obtener reporte multi-métrica
  */
-export function useMultiMetricReport(input: MultiMetricReportInput) {
+export function useMultiMetricReport(input: MultiMetricReportInput, options?: { enabled?: boolean }) {
   const queryKey = [
     'analytics',
     'multi-metric',
@@ -171,7 +171,7 @@ export function useMultiMetricReport(input: MultiMetricReportInput) {
     GET_MULTI_METRIC_REPORT.loc?.source.body || '',
     { input },
     {
-      enabled: input.controllers.length > 0 && input.metrics.length > 0,
+      enabled: (input.controllers.length > 0 && input.metrics.length > 0) && (options?.enabled !== false),
       staleTime: 2 * 60 * 1000, // 2 minutos - datos no se consideran stale
       gcTime: 10 * 60 * 1000, // 10 minutos - tiempo en caché
       refetchInterval: false, // NO refetch automático

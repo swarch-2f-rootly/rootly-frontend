@@ -23,7 +23,7 @@ const PlantCharts: React.FC<PlantChartsProps> = ({
   humidityData = [], 
   soilHumidityData = [],
   lightData = [], 
-  currentData, 
+  //currentData, 
   isLoading = false, 
   error 
 }) => {

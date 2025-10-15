@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getApiUrl } from '../lib/config/api';
 
 export interface User {
   id: string;
@@ -72,7 +73,7 @@ export const useAuth = () => {
     // If we have a refresh token, try to revoke it on the server
     if (refreshToken) {
       try {
-        const API_BASE_URL = import.meta.env.VITE_AUTH_BASE_URL || 'http://localhost:8001';
+        const API_BASE_URL = getApiUrl('gateway');
         await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
           method: 'POST',
           headers: {

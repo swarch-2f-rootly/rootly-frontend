@@ -18,7 +18,12 @@ export function usePlantChartData(controllerId: string) {
     }
   }), [controllerId]);
 
-  const { data: multiMetricData, isLoading, error } = useMultiMetricReport(multiMetricInput);
+  // Solo ejecutar la query si hay controllerId
+  const shouldExecuteQuery = !!controllerId && controllerId.length > 0;
+
+  const { data: multiMetricData, isLoading, error } = useMultiMetricReport(multiMetricInput, {
+    enabled: shouldExecuteQuery
+  });
 
   // Transformar los datos al formato esperado por PlantCharts
   const chartData = useMemo(() => {
