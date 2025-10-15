@@ -1,20 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
 import { Users } from 'lucide-react';
-import TeamCard from './TeamCard';
+import TeamCardSSR from './TeamCardSSR';
 
 interface TeamMember {
   username: string;
   name: string;
 }
 
-const TeamSection: React.FC = () => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
+// Versión simplificada de TeamSection para SSR (sin animaciones iniciales)
+const TeamSectionSSR: React.FC = () => {
   // Datos del equipo con usernames reales de GitHub
   const teamMembers: TeamMember[] = [
     {
@@ -52,20 +46,10 @@ const TeamSection: React.FC = () => {
   ];
 
   return (
-    <motion.section
-      initial={{ opacity: 0 }}
-      animate={isMounted ? { opacity: 1 } : {}}
-      transition={{ duration: 0.8 }}
-      className="py-16 px-6 bg-gradient-to-br from-slate-50 to-emerald-50"
-    >
+    <section className="py-16 px-6 bg-gradient-to-br from-slate-50 to-emerald-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isMounted ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold shadow-lg mb-6">
             <Users className="w-5 h-5 mr-2" />
             <span>Equipo Rootly</span>
@@ -82,24 +66,23 @@ const TeamSection: React.FC = () => {
             Un grupo de desarrolladores apasionados por la tecnología y la agricultura, 
             trabajando juntos para revolucionar el campo colombiano.
           </p>
-        </motion.div>
+        </div>
 
         {/* Team Grid */}
-        {isMounted && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {teamMembers.map((member, index) => (
-              <TeamCard
-                key={member.username}
-                username={member.username}
-                delay={index * 0.1}
-              />
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {teamMembers.map((member) => (
+            <TeamCardSSR
+              key={member.username}
+              username={member.username}
+              name={member.name}
+            />
+          ))}
+        </div>
 
       </div>
-    </motion.section>
+    </section>
   );
 };
 
-export default TeamSection;
+export default TeamSectionSSR;
+

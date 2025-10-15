@@ -76,6 +76,11 @@ const CollaborationSection: React.FC = () => {
   });
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const sensors = [
     "sensor-temperatura-01",
@@ -88,21 +93,21 @@ const CollaborationSection: React.FC = () => {
   );
 
   return (
-    <section ref={ref} id="collaboration-section" className="py-20 px-6 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <section ref={ref} id="collaboration-section" className="py-20 px-6 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            animate={isMounted && inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
             className="space-y-8"
           >
             <div className="space-y-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
+                animate={isMounted && inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.2, duration: 0.6 }}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-700 border border-emerald-200"
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
               >
                 <Zap size={16} className="mr-2" />
                 <span>Colaboración</span>
@@ -110,22 +115,24 @@ const CollaborationSection: React.FC = () => {
 
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
+                animate={isMounted && inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.4, duration: 0.6 }}
-                className="text-4xl font-bold text-slate-800 dark:text-slate-200"
+                className="text-4xl font-bold text-white"
               >
                 Haz que la agricultura sea{' '}
-                <RotatingText 
-                  words={["fluida", "eficiente", "inteligente", "sostenible"]} 
-                  className="text-emerald-600"
-                />
+                {isMounted && (
+                  <RotatingText 
+                    words={["fluida", "eficiente", "inteligente", "sostenible"]} 
+                    className="text-emerald-400"
+                  />
+                )}
               </motion.h2>
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
+                animate={isMounted && inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.6, duration: 0.6 }}
-                className="text-xl text-slate-600 dark:text-slate-400"
+                className="text-xl text-slate-300"
               >
                 Herramientas para tu equipo y partes interesadas para compartir información e iterar más rápido.
               </motion.p>
@@ -141,26 +148,27 @@ const CollaborationSection: React.FC = () => {
                 <motion.div 
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  animate={isMounted && inView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: 0.5 + i * 0.05, duration: 0.4 }}
                   className="flex items-center space-x-3"
                 >
-                  <div className="w-6 h-6 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
+                  <div className="w-6 h-6 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full flex items-center justify-center">
                     <div className="w-2 h-2 bg-white rounded-full" />
                   </div>
-                  <span className="text-slate-600 dark:text-slate-400">{feature}</span>
+                  <span className="text-slate-300">{feature}</span>
                 </motion.div>
               ))}
             </div>
           </motion.div>
 
-          <ScrollStack direction="up" speed={0.5}>
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.6, duration: 0.8 }}
-              className="p-6 bg-white/95 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg"
-            >
+          {isMounted && (
+            <ScrollStack direction="up" speed={0.5}>
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ delay: 0.6, duration: 0.8 }}
+                className="p-6 bg-slate-800/80 backdrop-blur-sm rounded-xl border border-slate-700 shadow-lg"
+              >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <input
@@ -168,32 +176,33 @@ const CollaborationSection: React.FC = () => {
                     placeholder="Buscar sensores..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-3 py-2 text-sm flex-1 mr-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                  <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition-colors">
-                    <Search size={16} />
-                  </button>
-                </div>
-
-                <div className="space-y-2">
-                  {filteredSensors.map((sensor, i) => (
-                    <motion.div 
-                      key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={inView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ delay: 0.8 + i * 0.1, duration: 0.4 }}
-                      className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                    >
-                      <span className="text-sm font-mono text-slate-700 dark:text-slate-300">{sensor}</span>
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">
-                        Activo
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
+                  className="bg-slate-900 border border-slate-700 rounded-2xl px-3 py-2 text-sm flex-1 mr-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-200 placeholder-slate-500"
+                />
+                <button className="p-2 hover:bg-slate-700 rounded-2xl transition-colors text-slate-300">
+                  <Search size={16} />
+                </button>
               </div>
-            </motion.div>
-          </ScrollStack>
+
+              <div className="space-y-2">
+                {filteredSensors.map((sensor, i) => (
+                  <motion.div 
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 0.8 + i * 0.1, duration: 0.4 }}
+                    className="flex items-center justify-between p-3 bg-slate-900 rounded-2xl hover:bg-slate-800 transition-colors"
+                  >
+                    <span className="text-sm font-mono text-slate-300">{sensor}</span>
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      Activo
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </ScrollStack>
+          )}
         </div>
       </div>
     </section>

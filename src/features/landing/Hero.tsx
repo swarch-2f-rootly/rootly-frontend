@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
 import { Link } from 'react-router-dom';
+import { SSRSafeMotion, SSRSafeMotionSection } from '../../utils/ssr-safe-motion';
 // Removed unused imports
 import { 
   Zap, 
@@ -175,7 +176,7 @@ const Hero: React.FC = () => {
       opacity={0.1}
       blur={40}
     >
-      <section className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden mt-12">
+      <SSRSafeMotionSection className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative overflow-hidden mt-12">
         <nav className="absolute top-3 left-0 right-0 z-50 p-6">
 
           <motion.button
@@ -253,7 +254,7 @@ const Hero: React.FC = () => {
           <div className="relative z-10 mx-auto px-4 py-20" style={{ maxWidth: '84rem' }}>
             <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Contenido izquierdo */}
-            <motion.div
+            <SSRSafeMotion
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
@@ -345,7 +346,7 @@ const Hero: React.FC = () => {
               </ClickSpark>
             </motion.div>
 
-          </motion.div>
+            </SSRSafeMotion>
 
             {/* Dashboard derecho */}
             <motion.div
@@ -439,28 +440,48 @@ const Hero: React.FC = () => {
               { value: "Auto", suffix: "", label: "Monitoreo Automático", change: "Programable", icon: Droplets, color: "teal" },
               { value: "IoT", suffix: "", label: "Tecnología", change: "Conectividad", icon: Activity, color: "cyan" },
               { value: "Web", suffix: "", label: "Acceso Remoto", change: "Desde Cualquier Lugar", icon: Zap, color: "emerald" }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 2.2 + index * 0.1, duration: 0.6 }}
-                className="text-center p-6 bg-white/90 rounded-xl border border-slate-200 hover:shadow-lg transition-shadow duration-200"
-              >
-                <div className={`w-12 h-12 bg-${stat.color}-100 rounded-lg flex items-center justify-center mx-auto mb-3`}>
-                  <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
-                </div>
-                <div className="text-3xl font-bold text-slate-800">
-                  {stat.value}{stat.suffix}
-                </div>
-                <p className="text-sm text-slate-600 mt-2 font-medium">{stat.label}</p>
-                <p className={`text-xs text-${stat.color}-600 font-medium mt-1`}>{stat.change}</p>
-              </motion.div>
-            ))}
+            ].map((stat, index) => {
+              // Mapear colores a clases completas para que Tailwind las detecte
+              const colorClasses = {
+                emerald: {
+                  bg: 'bg-emerald-100',
+                  text: 'text-emerald-600'
+                },
+                teal: {
+                  bg: 'bg-teal-100',
+                  text: 'text-teal-600'
+                },
+                cyan: {
+                  bg: 'bg-cyan-100',
+                  text: 'text-cyan-600'
+                }
+              };
+              
+              const colors = colorClasses[stat.color as keyof typeof colorClasses];
+              
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 2.2 + index * 0.1, duration: 0.6 }}
+                  className="text-center p-6 bg-white/90 rounded-xl border border-slate-200 hover:shadow-lg transition-shadow duration-200"
+                >
+                  <div className={`w-12 h-12 ${colors.bg} rounded-lg flex items-center justify-center mx-auto mb-3`}>
+                    <stat.icon className={`w-6 h-6 ${colors.text}`} />
+                  </div>
+                  <div className="text-3xl font-bold text-slate-800">
+                    {stat.value}{stat.suffix}
+                  </div>
+                  <p className="text-sm text-slate-600 mt-2 font-medium">{stat.label}</p>
+                  <p className={`text-xs ${colors.text} font-medium mt-1`}>{stat.change}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>
-    </section>
+    </SSRSafeMotionSection>
     </TrueFocus>
   )
 }
