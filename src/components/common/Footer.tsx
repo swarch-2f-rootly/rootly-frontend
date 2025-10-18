@@ -1,36 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <section className="py-20 px-6 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-black/10"></div>
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={{ 
-            rotate: [0, 360],
-            scale: [1, 1.1, 1]
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-20 -right-20 w-80 h-80 border border-white/10 rounded-full"
-        />
-        <motion.div
-          animate={{ 
-            rotate: [360, 0],
-            scale: [1, 1.2, 1]
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute -bottom-20 -left-20 w-96 h-96 border border-white/5 rounded-full"
-        />
-      </div>
+      {isMounted && (
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-20 -right-20 w-80 h-80 border border-white/10 rounded-full"
+          />
+          <motion.div
+            animate={{ 
+              rotate: [360, 0],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            className="absolute -bottom-20 -left-20 w-96 h-96 border border-white/5 rounded-full"
+          />
+        </div>
+      )}
 
       <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={isMounted ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
           className="space-y-4"
         >
@@ -42,19 +50,28 @@ const Footer: React.FC = () => {
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={isMounted ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.4, duration: 0.8 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <Link to="/login">
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-2xl font-normal flex items-center gap-2 justify-center text-sm"
-            >
-              Iniciar monitoreo
-              <ArrowRight size={16} />
-            </motion.button>
+            {isMounted ? (
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-2xl font-normal flex items-center gap-2 justify-center text-sm"
+              >
+                Iniciar monitoreo
+                <ArrowRight size={16} />
+              </motion.button>
+            ) : (
+              <button
+                className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-2xl font-normal flex items-center gap-2 justify-center text-sm"
+              >
+                Iniciar monitoreo
+                <ArrowRight size={16} />
+              </button>
+            )}
           </Link>
         </motion.div>
       </div>
