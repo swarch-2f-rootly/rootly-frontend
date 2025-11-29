@@ -15,7 +15,6 @@ import {
 import TrueFocus from '../ui/TrueFocus'
 import ConfirmModal from '../../components/ui/ConfirmModal'
 import PlantCharts from './PlantCharts'
-// import PlantAlerts from './PlantAlerts' // Commented for future use
 import PlantDevicesManager from '../devices/components/PlantDevicesManager'
 import PlantStatusCard from "./components/PlantStatusCard"
 import SensorDataCard from "./components/SensorDataCard"
